@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<module xmlns="urn:jboss:module:1.3" name="ca_teranet_ldap">
+    <resources>
+        <resource-root path="jboss-authentication-provider.jar"/>
+        <resource-root path="cspbtlogin.jar"/>
+        <resource-root path="util.jar"/>
+        <resource-root path="commons-beanutils-1.9.3.jar"/>
+        <resource-root path="commons-collections-3.2.1.jar"/>
+        <resource-root path="commons-lang-2.6.jar"/>
+        <resource-root path="commons-logging-1.1.1.jar"/>
+        <resource-root path="commons-digester-1.8.jar"/>
+    </resources>
+
+    <dependencies>
+
+        <system export="true">
+            <paths>
+                <path name="sun/net/www/protocol/https"/>
+                <path name="sun/net/www/protocol/http"/>
+                <path name="com/sun/net/ssl/internal/ssl"/>
+
+                <path name="javax/naming"/>
+                <path name="javax/naming/directory"/>
+                <path name="javax/naming/ldap"/>
+
+                <path name="com/sun/jndi/ldap"/>
+
+                <path name="javax/security/auth/login"/>
+                <path name="javax/security/auth"/>
+                <path name="javax/security/auth/callback"/>
+
+                <path name="javax/crypto"/>
+                <path name="javax/crypto/spec"/>
+
+                <path name="javax/resource/spi/security"/>
+            </paths>
+        </system>
+
+        <module name="org.picketbox"/>
+        <module name="org.apache.commons.logging"/>
+        <module name="org.jboss.logging"/>
+        <module name="org.jboss.log4j.logmanager"/>
+        <module name="log4j2" export="true"/>
+
+        <module name="javax.api"/>
+        <module name="javax.resource.api"/>
+        <module name="javax.transaction.api"/>
+
+        <module name="org.jboss.remote-naming" export="true"/>
+
+    </dependencies>
+</module>
