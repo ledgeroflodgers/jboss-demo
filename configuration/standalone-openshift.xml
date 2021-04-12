@@ -39,12 +39,8 @@
     <system-properties>
         <property name="org.apache.catalina.session.ManagerBase.SESSION_ID_ALPHABET" value="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AB"/>
         <property name="org.apache.tomcat.util.http.Parameters.MAX_COUNT" value="50000"/>
-        <property name="jackson.deserialization.whitelist.packages" value="ca.teranet.onland" />
-        <property name="spring.config.location" value="file:/apps/foundation/csp_onl/props/"/>
     </system-properties>
-    <vault code="ca.teranet.csp.business.services.CSPPasswordVault" module="ca_teranet_ldap">
-        <vault-option name="cspejb" value="${env.CSP_BT_DN}"/>
-    </vault>
+
     <management>
         <security-realms>
             <security-realm name="ManagementRealm">
