@@ -34,8 +34,17 @@ spec:
             - name: JAVA_OPTS_APPEND
               value: >-
                 -DpropertiesBaseFile=/opt/eap/standalone/configuration/validation-bt.properties
-            - name: onland_csp_openldap_lookup_password
-              value: Teranet1
+												- name: onland_csp_openldap_lookup_password
+														value: Teranet1
+												- name: CSP_DN
+														value: ',cn=DEV,ou=CSP,ou=private-ldap,dc=teranet-private,dc=ca'
+												- name: CSP_BT_DN
+														value: >-
+																uid=csp_bt_super_user,cn=DEV,ou=CSP,ou=private-ldap,dc=teranet-private,dc=ca
+												- name: EJB_HOST
+														value: onland-bt-app-onland-csp-dev-2.apps.mssocp4uat.corp.teranet.ca
+												- name: EJB_USER
+														value: csp_bt_super_user
           image: >-
             onland-csp-docker-snapshot.artifactory.corp.teranet.ca/onland-test:v1.0
           imagePullPolicy: Always
