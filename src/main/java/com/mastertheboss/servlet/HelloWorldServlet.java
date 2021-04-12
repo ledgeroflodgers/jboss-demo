@@ -38,7 +38,7 @@ public class HelloWorldServlet extends HttpServlet {
 		response.setContentType("text/html");
 		PrintWriter writer = response.getWriter();
 		//writer.println("<h1>Email Sent confirmation#: " + int_random + "</h1>");
-		writer.println("<h1>File name is#: " + fileName + "#" + int_random + "</h1>");
+		writer.println("<h1>File name is#: " + fileName + " #" + int_random + "</h1>");
 		writer.close();
     }
  
