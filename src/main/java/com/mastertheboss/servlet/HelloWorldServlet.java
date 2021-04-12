@@ -22,18 +22,23 @@ public class HelloWorldServlet extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
+
+		String fileName = System.getProperty("propertiesBaseFile");
+		System.out.println("&&&&&&&&&&& PROPERTY FILE NAME: " + fileName);
+
 		Random rand = new Random(); //instance of random class
 		int upperbound = 250000;
 		int int_random = rand.nextInt(upperbound);
-		try {
+		/*try {
 			GenericSendEmail email = new GenericSendEmail();
 			email.sendConfirmationEmail("saeed.dadashi@teranet.ca", "saeeddadashi82@gmail.com", "Hello " + Integer.toString(int_random), "test", null, null);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 		response.setContentType("text/html");
 		PrintWriter writer = response.getWriter();
-		writer.println("<h1>Email Sent confirmation#: " + int_random + "</h1>");
+		//writer.println("<h1>Email Sent confirmation#: " + int_random + "</h1>");
+		writer.println("<h1>File name is#: " + fileName + "#" + int_random + "</h1>");
 		writer.close();
     }
  
