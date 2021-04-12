@@ -1,0 +1,107 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app: onland-app-test
+  name: onland-app-test
+  namespace: onland-csp-dev-2
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    deploymentconfig: onland-app-test
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: onland-app-test
+        deploymentconfig: onland-app-test
+    spec:
+      containers:
+        - env:
+            - name: EAP_HOME
+              value: /opt/eap
+            - name: JAVA_OPTS_APPEND
+              value: >-
+                -DpropertiesErrorMessageFile=/opt/eap/standalone/configuration/validation-bt.properties
+            - name: onland_csp_openldap_lookup_password
+              value: Teranet1
+          image: >-
+            onland-csp-docker-snapshot.artifactory.corp.teranet.ca/onland-test:v1.0
+          imagePullPolicy: Always
+          name: onland-app
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+            - containerPort: 8443
+              protocol: TCP
+            - containerPort: 8778
+              protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /apps/csp/config/
+              name: volume-csp-pt-properties
+            - mountPath: /apps/csp/config/bt/
+              name: volume-validation-bt-properties
+            - mountPath: /apps/foundation/csp_onl/ldap/config/
+              name: volume-csp-password-conf
+            - mountPath: /apps/foundation/csp_onl/ldap/config/dnlist
+              name: volume-csp-dnlist
+            - mountPath: /apps/csp/config/map/
+              name: volume-map-proxy
+            - mountPath: /apps/foundation/csp_onl/ldap/
+              name: volume-jtruststore
+            - mountPath: /apps/csp/config/log
+              name: volume-log
+            - mountPath: /var/log/csp_onl/cspCache
+              name: volume-download
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+        - name: csp-snap-build
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - configMap:
+            defaultMode: 420
+            name: csp-pt
+          name: volume-csp-pt-properties
+        - configMap:
+            defaultMode: 420
+            name: validation-bt
+          name: volume-validation-bt-properties
+        - configMap:
+            defaultMode: 420
+            name: password
+          name: volume-csp-password-conf
+        - configMap:
+            defaultMode: 420
+            name: dnlist
+          name: volume-csp-dnlist
+        - configMap:
+            defaultMode: 420
+            name: map-proxy
+          name: volume-map-proxy
+        - name: volume-jtruststore
+          secret:
+            defaultMode: 420
+            secretName: jtruststore
+        - emptyDir: {}
+          name: volume-log
+        - emptyDir: {}
+          name: volume-download
+  test: false
+  triggers: []

@@ -1,0 +1,51 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: onland-app-test
+  name: onland-app-test
+  namespace: onland-csp-dev-2
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: null
+  output:
+    pushSecret:
+      name: csp-snap-build
+    to:
+      kind: DockerImage
+      name: 'onland-csp-docker-snapshot.artifactory.corp.teranet.ca/onland-test:v1.0'
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    git:
+      ref: main
+      uri: 'https://github.com/ledgeroflodgers/jboss-demo.git'
+    sourceSecret:
+      name: texdvbuild
+    type: Git
+  strategy:
+    sourceStrategy:
+      env:
+        - name: ARTIFACT_DIR
+          value: target/
+        - name: TZ
+          value: America/Toronto
+        - name: MAVEN_ARGS
+          value: clean package
+      from:
+        kind: DockerImage
+        name: >-
+          whitelisted-base-image.artifactory.corp.teranet.ca/jboss-eap-7/eap73-openjdk11-openshift-rhel8:7.3.6-1
+      pullSecret:
+        name: base-image-puller
+    type: Source
+  successfulBuildsHistoryLimit: 5
+  triggers:
+    - type: ConfigChange
+    - generic:
+        secret: 79e90b8c31b68ad8
+      type: Generic
+    - github:
+        secret: c6840c947a80bcde
+      type: GitHub
