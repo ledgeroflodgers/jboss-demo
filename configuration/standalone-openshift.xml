@@ -390,17 +390,8 @@
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:pojo:1.0"/>
         <subsystem xmlns="urn:jboss:domain:remoting:4.0">
-		
-			<http-connector name="http-remoting-connector" connector-ref="default" security-realm="ApplicationRealm"/>
-            <connector name="remoting-connector" socket-binding="remoting" security-realm="ApplicationRealm" />
-<!--            <outbound-connections>
-                <remote-outbound-connection name="remote-ejb-connection" outbound-socket-binding-ref="remote-ejb" username="csp_bt_super_user" security-realm="ejb-security-realm" protocol="remote">
-                    <properties>
-                        <property name="SASL_POLICY_NOANONYMOUS" value="false"/>
-                        <property name="SSL_ENABLED" value="false"/>
-                    </properties>
-                </remote-outbound-connection>
-            </outbound-connections>-->
+		<http-connector name="http-remoting-connector" connector-ref="default" security-realm="ApplicationRealm"/>
+            	<connector name="remoting-connector" socket-binding="remoting" security-realm="ApplicationRealm" />
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:resource-adapters:5.0"/>
         <subsystem xmlns="urn:jboss:domain:sar:1.0"/>
@@ -469,10 +460,10 @@
             <handlers>
                 <file name="welcome-content" path="${jboss.home.dir}/welcome-content"/>
             </handlers>
-            <filters>
+            	<filters>
         		<response-header name="cache-header" header-name="Cache-Control" header-value="no-cache, must-revalidate, max-age=3600"/>
-  				<response-header name="expires-header" header-name="Expires" header-value="3600"/>
-  			</filters>
+  			<response-header name="expires-header" header-name="Expires" header-value="3600"/>
+  		</filters>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:webservices:2.0">
             <modify-wsdl-address>true</modify-wsdl-address>
