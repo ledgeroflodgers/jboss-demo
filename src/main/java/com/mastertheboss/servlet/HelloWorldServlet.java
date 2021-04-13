@@ -12,8 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-// http://localhost:8080/helloworld/email
-@WebServlet(name = "email", urlPatterns = { "/email" })
+@WebServlet(name = "email", urlPatterns = { "/call" })
 public class HelloWorldServlet extends HttpServlet {
 
 	public HelloWorldServlet() {
