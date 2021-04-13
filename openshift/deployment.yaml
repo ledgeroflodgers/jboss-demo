@@ -33,7 +33,7 @@ spec:
               value: /opt/eap
             - name: JAVA_OPTS_APPEND
               value: >-
-                -DpropertiestestFile=/opt/eap/standalone/configuration/sample.properties
+                -DpropertiesTestFile=/opt/eap/standalone/configuration/sample.properties
                 -DpropertiesBaseFile=/apps/csp/config/csp-bt.properties
                 -DpropertiesErrorMessageFile=/apps/csp/config/bt/validation-bt.properties 
             - name: onland_csp_openldap_lookup_password
