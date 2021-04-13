@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <!-- localRepository
+     | The path to the local repository maven will use to store artifacts.
+    -->
+<!--    <localRepository>/centralbuild/apps/tex/.m2/repository</localRepository>-->
+
+    <pluginGroups>
+        <!-- pluginGroup
+         | Specifies a further group identifier to use for plugin lookup.
+        <pluginGroup>com.your.plugins</pluginGroup>
+        -->
+    </pluginGroups>
+
+    <proxies>
+        <proxy>
+            <id>optional</id>
+            <active>false</active>
+            <protocol>http</protocol>
+            <username></username>
+            <password></password>
+            <host>uniproxy</host>
+            <port>8118</port>
+            <nonProxyHosts>artifactory</nonProxyHosts>
+        </proxy>
+    </proxies>
+
+    <servers>
+
+        <server>
+            <id>snapshots</id>
+            <username>csp-relbld</username>
+            <password>AKCp5ccuuKCND76YJxjPdkcxTrKbHR9ohmR62AasZMD9X6axqbsnyTv6PPeRfkhmCPZBjhPJ4</password>
+        </server>
+
+        <!-- temporary must be deleted -->
+        <server>
+            <id>ext-development</id>
+            <username>csp-snapbld</username>
+            <password>AKCp5ccuuKCNBhp3w3a8EcGDJctV2A4AqHVUkXNiykAxkT9HV2XPqMpXepBsqr3agwpiijoSM</password>
+        </server>
+
+        <server>
+            <id>pluginsrelease</id>
+            <username>csp-relbld</username>
+            <password>AKCp5ccuuKCND76YJxjPdkcxTrKbHR9ohmR62AasZMD9X6axqbsnyTv6PPeRfkhmCPZBjhPJ4</password>
+        </server>
+        <server>
+            <id>pluginssnapshot</id>
+            <username>csp-snapbld</username>
+            <password>AKCp5ccuuKCNBhp3w3a8EcGDJctV2A4AqHVUkXNiykAxkT9HV2XPqMpXepBsqr3agwpiijoSM</password>
+        </server>
+    </servers>
+
+    <profiles>
+        <profile>
+            <id>releaselocal</id>
+            <repositories>
+
+                <repository>
+                    <id>snapshots</id>
+                    <name>product-development</name>
+                    <url>https://artifactory.corp.teranet.ca/artifactory/product-development</url>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>never</updatePolicy>
+                        <checksumPolicy>warn</checksumPolicy>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+
+                <!-- this will be deleted after artifacts are uploaded via sdlc team-->
+                <repository>
+                    <id>ext-development</id>
+                    <name>External release artifacts</name>
+                    <url>https://artifactory.corp.teranet.ca/artifactory/ext-development-local</url>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>never</updatePolicy>
+                        <checksumPolicy>warn</checksumPolicy>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+
+            </repositories>
+
+            <pluginRepositories>
+                <pluginRepository>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <id>pluginsrelease</id>
+                    <name>plugins-release</name>
+                    <url>https://artifactory.corp.teranet.ca/artifactory/plugins-release</url>
+                </pluginRepository>
+                <pluginRepository>
+                    <snapshots />
+                    <id>pluginssnapshot</id>
+                    <name>plugins-snapshot</name>
+                    <url>https://artifactory.corp.teranet.ca/artifactory/plugins-snapshot</url>
+                </pluginRepository>
+            </pluginRepositories>
+
+        </profile>
+    </profiles>
+
+    <activeProfiles>
+        <activeProfile>releaselocal</activeProfile>
+    </activeProfiles>
+</settings>
