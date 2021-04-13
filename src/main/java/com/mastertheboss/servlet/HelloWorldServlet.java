@@ -22,7 +22,7 @@ public class HelloWorldServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
 
-		String fileName = System.getProperty("propertiesBaseFile");
+		String fileName = System.getProperty("propertiesTestFile");
 		System.out.println("&&&&&&&&&&& PROPERTY FILE NAME: " + fileName);
 
 		Random rand = new Random(); //instance of random class
