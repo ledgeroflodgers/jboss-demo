@@ -24,7 +24,7 @@ public class HelloWorldServlet extends HttpServlet {
             HttpServletResponse response) throws ServletException, IOException {
 
 		String fileName = System.getProperty("propertiesTestFile");
-		System.out.println("&&&&&&&&&&& PROPERTY FILE NAME: " + fileName);
+		System.out.println("&&&&&&&&&&& TEST PROPERTY FILE: " + fileName);
 
 		Random rand = new Random(); //instance of random class
 		int upperbound = 250000;
