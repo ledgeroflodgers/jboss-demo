@@ -34,6 +34,8 @@ spec:
             - name: JAVA_OPTS_APPEND
               value: >-
                 -DpropertiesBaseFile=/opt/eap/standalone/configuration/sample.properties
+                -DpropertiesBaseFile=/apps/csp/config/csp-bt.properties
+                -DpropertiesErrorMessageFile=/apps/csp/config/bt/validation-bt.properties 
             - name: onland_csp_openldap_lookup_password
               value: Teranet1
             - name: CSP_DN
