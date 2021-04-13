@@ -32,7 +32,7 @@ public class HelloWorldServlet extends HttpServlet {
 		response.setContentType("text/html");
 		PrintWriter writer = response.getWriter();
 		writer.println("<h1>Random#: " + int_random + "</h1>");
-		writer.println("<h3>File name is: " + fileName + "</h3>");
+		writer.println("<h3>System Property Read test: " + fileName + "</h3>");
 		writer.close();
     }
  
