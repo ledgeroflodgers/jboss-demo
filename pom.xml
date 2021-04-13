@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.saeed</groupId>
+  <groupId>com.mastertheboss</groupId>
   <artifactId>jboss-tester</artifactId>
   <version>1.0</version>
   <packaging>war</packaging>
@@ -36,6 +36,19 @@
       <groupId>com.sun.mail</groupId>
       <artifactId>javax.mail</artifactId>
       <version>1.6.2</version>
+    </dependency>
+
+    <!-- Ldap -->
+    <dependency>
+      <groupId>ca.teranet.csp</groupId>
+      <artifactId>util</artifactId>
+      <version>12.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>ca.teranet.ldap</groupId>
+      <artifactId>jboss-authentication-provider</artifactId>
+      <version>1.1</version>
     </dependency>
 
   </dependencies>
