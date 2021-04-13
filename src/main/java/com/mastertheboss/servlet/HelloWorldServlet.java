@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-// http://localhost:8080/helloworld/call
 @WebServlet(name = "email", urlPatterns = { "/call" })
 public class HelloWorldServlet extends HttpServlet {
 
@@ -29,16 +28,11 @@ public class HelloWorldServlet extends HttpServlet {
 		Random rand = new Random(); //instance of random class
 		int upperbound = 250000;
 		int int_random = rand.nextInt(upperbound);
-		/*try {
-			GenericSendEmail email = new GenericSendEmail();
-			email.sendConfirmationEmail("saeed.dadashi@teranet.ca", "saeeddadashi82@gmail.com", "Hello " + Integer.toString(int_random), "test", null, null);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}*/
+
 		response.setContentType("text/html");
 		PrintWriter writer = response.getWriter();
-		//writer.println("<h1>Email Sent confirmation#: " + int_random + "</h1>");
-		writer.println("<h1>File name is#: " + fileName + " #" + int_random + "</h1>");
+		writer.println("<h1>Random#: " + int_random + "</h1>");
+		writer.println("<h3>File name is: " + fileName + "</h3>");
 		writer.close();
     }
  
