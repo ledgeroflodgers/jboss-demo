@@ -41,8 +41,8 @@ spec:
                 secretKeyRef:
                   key: onland_csp_openldap_lookup_password
                   name: onland-csp-openldap-lookup-password
-            - name: EJB_HOST
-              value: onland-bt-app-onland-csp-dev-2.apps.mssocp4uat.corp.teranet.ca
+            - name: JBOSS_VERSION
+              value: 7.2.9
           image: >-
             onland-csp-docker-snapshot.artifactory.corp.teranet.ca/onland-test:v1.0
           imagePullPolicy: Always
