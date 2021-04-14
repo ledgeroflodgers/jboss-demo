@@ -62,7 +62,7 @@ public class HelloWorldServlet extends HttpServlet {
 		String pass = new Ldap().getPassword();
 		writer.println("<h3>Test 2) Ldap: </h3> <p style=" + "\"color:green;\">" + pass + "</p>");
 
-		writer.println("<h3>Test 3) Version: </h3> <p style=" + "\"color:green;\">" + ver.toString() + "</p>");
+		writer.println("<h3>Test 3) Version: </h3> <p style=" + "\"color:green;\">" + ver + "</p>");
 		
 		writer.close();
 
