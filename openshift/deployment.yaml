@@ -64,8 +64,8 @@ spec:
               name: volume-validation-bt-properties
             - mountPath: /apps/foundation/csp_onl/ldap/config/
               name: volume-ldap-config
-            - mountPath: /apps/foundation/csp_onl/ldap/
-              name: volume-jtruststore
+            - mountPath: /apps/foundation/csp/security/
+              name: volume-cspstore
             - mountPath: /apps/csp/config/log
               name: volume-log
             - mountPath: /var/log/csp_onl/cspCache
@@ -94,10 +94,10 @@ spec:
                   name: password
               - configMap:
                   name: dnlist
-        - name: volume-jtruststore
+        - name: volume-cspstore
           secret:
+            secretName: cspstore
             defaultMode: 420
-            secretName: jtruststore
         - emptyDir: {}
           name: volume-log
         - emptyDir: {}
