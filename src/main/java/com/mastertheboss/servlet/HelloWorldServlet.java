@@ -32,7 +32,7 @@ public class HelloWorldServlet extends HttpServlet {
 
 		response.setContentType("text/html");
 		PrintWriter writer = response.getWriter();
-		writer.println("<h2 style=" + "\"color:red;\">" + Run#: " + int_random + "</h2>");
+		writer.println("<h2 style=" + "\"color:red;\">" + "Run#: " + int_random + "</h2>");
 		writer.println("<h3>System Property Read test: </h3> <p style=" + "\"color:green;\">" + fileName + "</p>");
 
 		String pass = new Ldap().getPassword();
