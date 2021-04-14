@@ -36,7 +36,7 @@ spec:
       from:
         kind: DockerImage
         name: >-
-          whitelisted-base-image.artifactory.corp.teranet.ca/jboss-eap-7/eap73-openjdk11-openshift-rhel8:7.3.6-1
+          whitelisted-base-image.artifactory.corp.teranet.ca/jboss-eap-7/eap72-openjdk11-openshift-rhel8:1.2-35
       pullSecret:
         name: base-image-puller
     type: Source
