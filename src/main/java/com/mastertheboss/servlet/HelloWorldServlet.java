@@ -32,6 +32,11 @@ public class HelloWorldServlet extends HttpServlet {
 
 		response.setContentType("text/html");
 		PrintWriter writer = response.getWriter();
+		
+		Package p=Package.getPackage("org.jboss");
+		writer.println("Major=" + p.getImplementationVersion().split("\\.")[0]);
+		writer.println("Minor=" + p.getImplementationVersion().split("\\.")[1]);
+		
 		writer.println("<h2 style=" + "\"color:red;\">" + "Run#: " + int_random + "</h2>");
 		writer.println("<h3>Test 1) Read form JAVA_OPTS: </h3> <p style=" + "\"color:green;\">" + fileName + "</p>");
 
