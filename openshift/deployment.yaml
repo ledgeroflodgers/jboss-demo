@@ -37,7 +37,10 @@ spec:
                 -DpropertiesBaseFile=/apps/csp/config/csp-pt.properties
                 -DpropertiesErrorMessageFile=/apps/csp/config/bt/validation-bt.properties 
             - name: onland_csp_openldap_lookup_password
-              value: Teranet1
+              valueFrom:
+                secretKeyRef:
+                  key: onland_csp_openldap_lookup_password
+                  name: onland-csp-openldap-lookup-password
             - name: CSP_DN
               value: ',cn=DEV,ou=CSP,ou=private-ldap,dc=teranet-private,dc=ca'
             - name: CSP_BT_DN
