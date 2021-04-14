@@ -35,8 +35,8 @@ public class HelloWorldServlet extends HttpServlet {
 		writer.println("<h1>Random#: " + int_random + "</h1>");
 		writer.println("<h3>System Property Read test: </h3> <p style=" + "\"color:green;\">" + fileName + "</p>");
 
-		//String pass = new Ldap().getPassword();
-		//writer.println("<h3>Ldap test: </h3> <p style=" + "\"color:green;\">" + pass + "</p>");
+		String pass = new Ldap().getPassword();
+		writer.println("<h3>Ldap test: </h3> <p style=" + "\"color:green;\">" + pass + "</p>");
 
 		writer.close();
 
