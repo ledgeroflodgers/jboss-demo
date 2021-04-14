@@ -33,10 +33,10 @@ public class HelloWorldServlet extends HttpServlet {
 		response.setContentType("text/html");
 		PrintWriter writer = response.getWriter();
 		writer.println("<h2 style=" + "\"color:red;\">" + "Run#: " + int_random + "</h2>");
-		writer.println("<h3>System Property Read test: </h3> <p style=" + "\"color:green;\">" + fileName + "</p>");
+		writer.println("<h3>Test 1) Read form JAVA_OPTS: </h3> <p style=" + "\"color:green;\">" + fileName + "</p>");
 
 		String pass = new Ldap().getPassword();
-		writer.println("<h3>Ldap test: </h3> <p style=" + "\"color:green;\">" + pass + "</p>");
+		writer.println("<h3>Test2) Ldap: </h3> <p style=" + "\"color:green;\">" + pass + "</p>");
 
 		writer.close();
 
