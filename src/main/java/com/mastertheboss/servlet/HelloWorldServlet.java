@@ -6,6 +6,9 @@ import com.mastertheboss.servlet.util.Ldap;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Random;
+import javax.management.*;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,9 +22,28 @@ public class HelloWorldServlet extends HttpServlet {
 		super();
 
 	}
-	
+
 	protected void doGet(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
+						 HttpServletResponse response) throws ServletException, IOException {
+
+
+		try {
+			MBeanServerConnection server = (MBeanServerConnection)new InitialContext().lookup("jmx/rmi/RMIAdaptor");
+			ObjectName on = new ObjectName("jboss.system:type=Server");
+			Object ver = server.getAttribute(on, "VersionNumber");
+		} catch (MBeanException e) {
+			e.printStackTrace();
+		} catch (AttributeNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstanceNotFoundException e) {
+			e.printStackTrace();
+		} catch (ReflectionException e) {
+			e.printStackTrace();
+		} catch (NamingException e) {
+			e.printStackTrace();
+		} catch (MalformedObjectNameException e) {
+			e.printStackTrace();
+		}
 
 		String fileName = System.getProperty("propertiesTestFile");
 		System.out.println("&&&&&&&&&&& TEST PROPERTY FILE: " + fileName);
@@ -32,11 +54,7 @@ public class HelloWorldServlet extends HttpServlet {
 
 		response.setContentType("text/html");
 		PrintWriter writer = response.getWriter();
-		
-		Package p=Package.getPackage("org.jboss");
-		writer.println("Major=" + p.getImplementationVersion().split("\\.")[0]);
-		writer.println("Minor=" + p.getImplementationVersion().split("\\.")[1]);
-		
+
 		writer.println("<h2 style=" + "\"color:red;\">" + "Run#: " + int_random + "</h2>");
 		writer.println("<h3>Test 1) Read form JAVA_OPTS: </h3> <p style=" + "\"color:green;\">" + fileName + "</p>");
 
@@ -45,14 +63,15 @@ public class HelloWorldServlet extends HttpServlet {
 
 		writer.close();
 
-    }
- 
+
+	}
+
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
 	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+						  HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
 
