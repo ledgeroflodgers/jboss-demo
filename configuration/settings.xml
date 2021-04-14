@@ -32,26 +32,26 @@
 
         <server>
             <id>snapshots</id>
-            <username>csp-relbld</username>
-            <password>AKCp5ccuuKCND76YJxjPdkcxTrKbHR9ohmR62AasZMD9X6axqbsnyTv6PPeRfkhmCPZBjhPJ4</password>
+            <username>sdadas01</username>
+            <password>AKCp5ekHX345Pksh1HgoDvz9FK8ne723hxeBbKvfY4yLmmkMkAE5b79Rkz4g3sFhChyfF3yxh</password>
         </server>
 
         <!-- temporary must be deleted -->
         <server>
             <id>ext-development</id>
-            <username>csp-snapbld</username>
-            <password>AKCp5ccuuKCNBhp3w3a8EcGDJctV2A4AqHVUkXNiykAxkT9HV2XPqMpXepBsqr3agwpiijoSM</password>
+            <username>sdadas01</username>
+            <password>AKCp5ekHX345Pksh1HgoDvz9FK8ne723hxeBbKvfY4yLmmkMkAE5b79Rkz4g3sFhChyfF3yxh</password>
         </server>
 
         <server>
             <id>pluginsrelease</id>
-            <username>csp-relbld</username>
-            <password>AKCp5ccuuKCND76YJxjPdkcxTrKbHR9ohmR62AasZMD9X6axqbsnyTv6PPeRfkhmCPZBjhPJ4</password>
+            <username>sdadas01</username>
+            <password>AKCp5ekHX345Pksh1HgoDvz9FK8ne723hxeBbKvfY4yLmmkMkAE5b79Rkz4g3sFhChyfF3yxh</password>
         </server>
         <server>
             <id>pluginssnapshot</id>
-            <username>csp-snapbld</username>
-            <password>AKCp5ccuuKCNBhp3w3a8EcGDJctV2A4AqHVUkXNiykAxkT9HV2XPqMpXepBsqr3agwpiijoSM</password>
+            <username>sdadas01</username>
+            <password>AKCp5ekHX345Pksh1HgoDvz9FK8ne723hxeBbKvfY4yLmmkMkAE5b79Rkz4g3sFhChyfF3yxh</password>
         </server>
     </servers>
 
