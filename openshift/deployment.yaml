@@ -67,11 +67,7 @@ spec:
             - mountPath: /apps/csp/config/bt/
               name: volume-validation-bt-properties
             - mountPath: /apps/foundation/csp_onl/ldap/config/
-              name: volume-csp-password-conf
-            - mountPath: /apps/foundation/csp_onl/ldap/config/dnlist
-              name: volume-csp-dnlist
-            - mountPath: /apps/csp/config/map/
-              name: volume-map-proxy
+              name: volume-ldap-config
             - mountPath: /apps/foundation/csp_onl/ldap/
               name: volume-jtruststore
             - mountPath: /apps/csp/config/log
@@ -94,18 +90,14 @@ spec:
             defaultMode: 420
             name: validation-bt
           name: volume-validation-bt-properties
-        - configMap:
+        - name: volume-ldap-config
+          projected:
             defaultMode: 420
-            name: password
-          name: volume-csp-password-conf
-        - configMap:
-            defaultMode: 420
-            name: dnlist
-          name: volume-csp-dnlist
-        - configMap:
-            defaultMode: 420
-            name: map-proxy
-          name: volume-map-proxy
+            sources:
+              - configMap:
+                  name: password
+              - configMap:
+                  name: dnlist
         - name: volume-jtruststore
           secret:
             defaultMode: 420
