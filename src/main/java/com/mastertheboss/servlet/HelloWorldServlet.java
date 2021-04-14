@@ -31,7 +31,7 @@ public class HelloWorldServlet extends HttpServlet {
 		try {
 			MBeanServerConnection server = (MBeanServerConnection)new InitialContext().lookup("jmx/rmi/RMIAdaptor");
 			ObjectName on = new ObjectName("jboss.system:type=Server");
-			Object ver = server.getAttribute(on, "VersionNumber");
+			ver = server.getAttribute(on, "VersionNumber");
 		} catch (MBeanException e) {
 			e.printStackTrace();
 		} catch (AttributeNotFoundException e) {
