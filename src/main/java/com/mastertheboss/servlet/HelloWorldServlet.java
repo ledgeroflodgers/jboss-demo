@@ -3,10 +3,6 @@ package com.mastertheboss.servlet;
 import com.mastertheboss.servlet.util.GenericSendEmail;
 import com.mastertheboss.servlet.util.Ldap;
 
-import javax.management.*;
-import javax.management.remote.JMXConnector;
-import javax.management.remote.JMXConnectorFactory;
-import javax.management.remote.JMXServiceURL;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -26,30 +22,6 @@ public class HelloWorldServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request,
                          HttpServletResponse response) throws ServletException, IOException {
-
-
-        String host = "localhost";
-        Object ver = null;
-        int port = 9990;  // management-http port
-        String urlString = "service:jmx:remote+http://" + System.getenv("EJB_HOST") + ":" + port;
-        System.out.println("\n\n\t****  urlString: " + urlString);
-        ;
-        JMXServiceURL serviceURL = new JMXServiceURL(urlString);
-        JMXConnector jmxConnector = JMXConnectorFactory.connect(serviceURL, null);
-        MBeanServerConnection connection = jmxConnector.getMBeanServerConnection();
-        ObjectName on = null;
-        try {
-            on = new ObjectName("jboss.system:type=Server");
-            ver = connection.getAttribute(on, "VersionNumber");
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
-
-        //Invoke on the JBoss AS MBean server
-        int count = connection.getMBeanCount();
-        System.out.println(count);
-        jmxConnector.close();
-
         String fileName = System.getProperty("propertiesTestFile");
         System.out.println("&&&&&&&&&&& TEST PROPERTY FILE: " + fileName);
 
@@ -66,10 +38,9 @@ public class HelloWorldServlet extends HttpServlet {
         String pass = new Ldap().getPassword();
         writer.println("<h3>Test 2) Ldap: </h3> <p style=" + "\"color:green;\">" + pass + "</p>");
 
-        writer.println("<h3>Test 3) Version: </h3> <p style=" + "\"color:green;\">" + ver + "</p>");
+        writer.println("<h3>Test 3) Version: </h3> <p style=" + "\"color:green;\">" + System.getenv("JBOSS_VERSION") + "</p>");
 
         writer.close();
-
 
     }
 
