@@ -19,7 +19,7 @@ spec:
   runPolicy: Serial
   source:
     git:
-      ref: main
+      ref: full-ha-branch
       uri: 'https://github.com/ledgeroflodgers/jboss-demo.git'
     sourceSecret:
       name: texdvbuild
