@@ -31,7 +31,7 @@ public class HelloWorldServlet extends HttpServlet {
         String host = "localhost";
         Object ver = null;
         int port = 9990;  // management-http port
-        String urlString = "service:jmx:remote+http://" + host + ":" + port;
+        String urlString = "service:jmx:remote+http://" + System.getenv("EJB_HOST") + ":" + port;
         System.out.println("\n\n\t****  urlString: " + urlString);
         ;
         JMXServiceURL serviceURL = new JMXServiceURL(urlString);
@@ -40,19 +40,9 @@ public class HelloWorldServlet extends HttpServlet {
         ObjectName on = null;
         try {
             on = new ObjectName("jboss.system:type=Server");
-        } catch (MalformedObjectNameException e) {
-            e.printStackTrace();
-        }
-        try {
             ver = connection.getAttribute(on, "VersionNumber");
-        } catch (MBeanException e) {
-            e.printStackTrace();
-        } catch (AttributeNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstanceNotFoundException e) {
-            e.printStackTrace();
-        } catch (ReflectionException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
         }
 
         //Invoke on the JBoss AS MBean server
@@ -77,7 +67,7 @@ public class HelloWorldServlet extends HttpServlet {
         writer.println("<h3>Test 2) Ldap: </h3> <p style=" + "\"color:green;\">" + pass + "</p>");
 
         writer.println("<h3>Test 3) Version: </h3> <p style=" + "\"color:green;\">" + ver + "</p>");
-		
+
         writer.close();
 
 
