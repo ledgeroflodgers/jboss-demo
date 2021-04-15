@@ -469,7 +469,8 @@
             </mail-session>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:messaging-activemq:8.0">
-            <server name="default">
+            <server name="default" persistence-enabled="true">
+                <security domain="JMSLogin"/>
                 <cluster password="${jboss.messaging.cluster.password:CHANGE ME!!}"/>
                 <statistics enabled="${wildfly.messaging-activemq.statistics-enabled:${wildfly.statistics-enabled:false}}"/>
                 <security-setting name="#">
