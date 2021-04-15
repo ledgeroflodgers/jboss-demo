@@ -101,7 +101,7 @@
     </management>
     <profile>
         <subsystem xmlns="urn:jboss:domain:logging:8.0">
-             <console-handler name="CONSOLE">
+            <console-handler name="CONSOLE">
                 <level name="DEBUG"/>
                 <formatter>
                     <named-formatter name="PATTERN"/>
@@ -120,9 +120,9 @@
                 <level name="WARN"/>
             </logger>
             <root-logger>
-                <level name="INFO"/>
+                <level name="DEBUG"/>
                 <handlers>
-                    <handler name="FILE"/>
+                    <handler name="CONSOLE"/>
                 </handlers>
             </root-logger>
             <formatter name="PATTERN">
