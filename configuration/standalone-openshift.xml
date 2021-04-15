@@ -44,33 +44,30 @@
         <extension module="org.wildfly.extension.undertow"/>
         <extension module="org.wildfly.iiop-openjdk"/>
     </extensions>
-    <system-properties>
-        <property name="org.apache.catalina.session.ManagerBase.SESSION_ID_ALPHABET" value="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AB"/>
-        <property name="jackson.deserialization.whitelist.packages" value="ca.teranet" />
-    </system-properties>
-    <vault code="ca.teranet.csp.business.services.CSPPasswordVault" module="ca_teranet_ldap">
-        <vault-option name="cspejb" value="uid=csp_bt_super_user,${env.CSP_LDAP_DN}"/>
-        <vault-option name="cspjms" value="uid=cspreceiver,${env.CSP_LDAP_DN}"/>
-    </vault>
     <management>
         <security-realms>
             <security-realm name="ManagementRealm">
                 <authentication>
-                    <jaas name="jmx-console"/>
+                    <local default-user="$local" skip-group-loading="true"/>
+                    <properties path="mgmt-users.properties" relative-to="jboss.server.config.dir"/>
                 </authentication>
                 <authorization map-groups-to-roles="false">
                     <properties path="mgmt-groups.properties" relative-to="jboss.server.config.dir"/>
                 </authorization>
             </security-realm>
             <security-realm name="ApplicationRealm">
-                <authentication>
-                    <jaas name="CSPBTLogin"/>
-                </authentication>
-            </security-realm>
-            <security-realm name="ejb-security-realm">
                 <server-identities>
-                    <secret value="${VAULT::cspejb::password::1}"/>
+                    <ssl>
+                        <keystore path="application.keystore" relative-to="jboss.server.config.dir" keystore-password="password" alias="server" key-password="password" generate-self-signed-certificate-host="localhost"/>
+                    </ssl>
                 </server-identities>
+                <authentication>
+                    <local default-user="$local" allowed-users="*" skip-group-loading="true"/>
+                    <properties path="application-users.properties" relative-to="jboss.server.config.dir"/>
+                </authentication>
+                <authorization>
+                    <properties path="application-roles.properties" relative-to="jboss.server.config.dir"/>
+                </authorization>
             </security-realm>
         </security-realms>
         <audit-log>
@@ -235,11 +232,11 @@
             </remote>
             <thread-pools>
                 <thread-pool name="default">
-                    <max-threads count="30"/>
-                    <keepalive-time time="100" unit="milliseconds"/>
+                    <max-threads count="10"/>
+                    <keepalive-time time="60" unit="seconds"/>
                 </thread-pool>
             </thread-pools>
-            <iiop enable-by-default="true" use-qualified-name="false"/>
+            <iiop enable-by-default="false" use-qualified-name="false"/>
             <default-security-domain value="other"/>
             <default-missing-method-permissions-deny-access value="true"/>
             <statistics enabled="${wildfly.ejb3.statistics-enabled:${wildfly.statistics-enabled:false}}"/>
