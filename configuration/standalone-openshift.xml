@@ -101,14 +101,12 @@
     </management>
     <profile>
         <subsystem xmlns="urn:jboss:domain:logging:8.0">
-            <periodic-rotating-file-handler name="FILE" autoflush="true">
+             <console-handler name="CONSOLE">
+                <level name="DEBUG"/>
                 <formatter>
                     <named-formatter name="PATTERN"/>
                 </formatter>
-                <file relative-to="jboss.server.log.dir" path="server.log"/>
-                <suffix value=".yyyy-MM-dd"/>
-                <append value="true"/>
-            </periodic-rotating-file-handler>
+            </console-handler>
             <logger category="com.arjuna">
                 <level name="WARN"/>
             </logger>
