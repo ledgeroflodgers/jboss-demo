@@ -239,10 +239,9 @@
                     <keepalive-time time="100" unit="milliseconds"/>
                 </thread-pool>
             </thread-pools>
-            <iiop enable-by-default="true" use-qualified-name="true"/>
-            <in-vm-remote-interface-invocation pass-by-value="false"/>
-            <default-security-domain value="CSPBTLogin"/>
-            <default-missing-method-permissions-deny-access value="false"/>
+            <iiop enable-by-default="true" use-qualified-name="false"/>
+            <default-security-domain value="other"/>
+            <default-missing-method-permissions-deny-access value="true"/>
             <statistics enabled="${wildfly.ejb3.statistics-enabled:${wildfly.statistics-enabled:false}}"/>
             <log-system-exceptions value="true"/>
         </subsystem>
