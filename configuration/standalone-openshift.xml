@@ -34,7 +34,7 @@
         <extension module="org.wildfly.extension.ee-security"/>
         <extension module="org.wildfly.extension.elytron"/>
         <extension module="org.wildfly.extension.io"/>
-<!--        <extension module="org.wildfly.extension.messaging-activemq"/>-->
+        <extension module="org.wildfly.extension.messaging-activemq"/>
         <extension module="org.wildfly.extension.microprofile.config-smallrye"/>
         <extension module="org.wildfly.extension.microprofile.health-smallrye"/>
         <extension module="org.wildfly.extension.microprofile.metrics-smallrye"/>
@@ -180,60 +180,23 @@
         <subsystem xmlns="urn:jboss:domain:core-management:1.0"/>
         <subsystem xmlns="urn:jboss:domain:datasources:5.0">
             <datasources>
-                <xa-datasource jndi-name="java:/unityDS" pool-name="Unity_JDBC_ConnPool" enabled="true" use-java-context="true" statistics-enabled="true">
-                    <xa-datasource-property name="URL">${env.CSP_DB_URL1}
-                    </xa-datasource-property>
-                    <driver>oracle</driver>
-                    <xa-pool>
-                        <min-pool-size>20</min-pool-size>
-                        <max-pool-size>50</max-pool-size>
-                        <is-same-rm-override>false</is-same-rm-override>
-                        <no-tx-separate-pools>true</no-tx-separate-pools>
-                    </xa-pool>
+                <datasource jndi-name="java:jboss/datasources/ExampleDS" pool-name="ExampleDS" enabled="true" use-java-context="true" statistics-enabled="${wildfly.datasources.statistics-enabled:${wildfly.statistics-enabled:false}}">
+                    <connection-url>jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</connection-url>
+                    <driver>h2</driver>
                     <security>
-                        <security-domain>EncryptedCSPDBPassword</security-domain>
+                        <user-name>sa</user-name>
+                        <password>sa</password>
                     </security>
-                    <validation>
-                        <valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.oracle.OracleValidConnectionChecker"/>
-                        <stale-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.oracle.OracleStaleConnectionChecker"/>
-                        <exception-sorter class-name="org.jboss.jca.adapters.jdbc.extensions.oracle.OracleExceptionSorter"/>
-                    </validation>
-                    <statement>
-                        <track-statements>true</track-statements>
-                    </statement>
-                </xa-datasource>
-                <xa-datasource jndi-name="java:jboss/datasources/cspDSXA" pool-name="cspDSXA" enabled="true" use-java-context="true" statistics-enabled="true">
-                    <xa-datasource-property name="URL">
-                        ${env.CSP_DB_URL2}
-                    </xa-datasource-property>
-                    <driver>oracle</driver>
-                    <xa-pool>
-                        <min-pool-size>20</min-pool-size>
-                        <max-pool-size>50</max-pool-size>
-                        <is-same-rm-override>false</is-same-rm-override>
-                        <no-tx-separate-pools>true</no-tx-separate-pools>
-                    </xa-pool>
-                    <security>
-                        <security-domain>EncryptedCSPDBPassword</security-domain>
-                    </security>
-                    <validation>
-                        <valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.oracle.OracleValidConnectionChecker"/>
-                        <stale-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.oracle.OracleStaleConnectionChecker"/>
-                        <exception-sorter class-name="org.jboss.jca.adapters.jdbc.extensions.oracle.OracleExceptionSorter"/>
-                    </validation>
-                    <statement>
-                        <track-statements>true</track-statements>
-                    </statement>
-                </xa-datasource>
+                </datasource>
                 <drivers>
-                    <driver name="oracle" module="oracle-jdbc">
-                        <xa-datasource-class>oracle.jdbc.xa.client.OracleXADataSource</xa-datasource-class>
+                    <driver name="h2" module="com.h2database.h2">
+                        <xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>
                     </driver>
                 </drivers>
             </datasources>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:deployment-scanner:2.0">
-            <deployment-scanner path="deployments" relative-to="jboss.server.base.dir" scan-interval="3000" auto-deploy-exploded="true" runtime-failure-causes-rollback="${jboss.deployment.scanner.rollback.on.failure:false}"/>
+            <deployment-scanner path="deployments" relative-to="jboss.server.base.dir" scan-interval="5000" runtime-failure-causes-rollback="${jboss.deployment.scanner.rollback.on.failure:false}"/>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:discovery:1.0"/>
         <subsystem xmlns="urn:jboss:domain:distributable-web:2.0" default-session-management="default" default-single-sign-on-management="default">
@@ -261,7 +224,7 @@
                     <managed-scheduled-executor-service name="default" jndi-name="java:jboss/ee/concurrency/scheduler/default" context-service="default" hung-task-threshold="60000" keepalive-time="3000"/>
                 </managed-scheduled-executor-services>
             </concurrent>
-            <default-bindings context-service="java:jboss/ee/concurrency/context/default" managed-executor-service="java:jboss/ee/concurrency/executor/default" managed-scheduled-executor-service="java:jboss/ee/concurrency/scheduler/default" managed-thread-factory="java:jboss/ee/concurrency/factory/default"/>
+            <default-bindings context-service="java:jboss/ee/concurrency/context/default" datasource="java:jboss/datasources/ExampleDS" jms-connection-factory="java:jboss/DefaultJMSConnectionFactory" managed-executor-service="java:jboss/ee/concurrency/executor/default" managed-scheduled-executor-service="java:jboss/ee/concurrency/scheduler/default" managed-thread-factory="java:jboss/ee/concurrency/factory/default"/>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:ee-security:1.0"/>
         <subsystem xmlns="urn:jboss:domain:ejb3:6.0">
@@ -269,28 +232,25 @@
                 <stateless>
                     <bean-instance-pool-ref pool-name="slsb-strict-max-pool"/>
                 </stateless>
-                <stateful default-access-timeout="5000" cache-ref="simple"/>
+                <stateful default-access-timeout="5000" cache-ref="distributable" passivation-disabled-cache-ref="simple"/>
                 <singleton default-access-timeout="5000"/>
             </session-bean>
             <mdb>
-                <resource-adapter-ref resource-adapter-name="${ejb.resource-adapter-name:activemq-ra}"/>
+                <resource-adapter-ref resource-adapter-name="${ejb.resource-adapter-name:activemq-ra.rar}"/>
                 <bean-instance-pool-ref pool-name="mdb-strict-max-pool"/>
             </mdb>
             <pools>
                 <bean-instance-pools>
-                    <strict-max-pool name="slsb-strict-max-pool" max-pool-size="30" instance-acquisition-timeout="10" instance-acquisition-timeout-unit="SECONDS"/>
-                    <strict-max-pool name="mdb-strict-max-pool" max-pool-size="5" instance-acquisition-timeout="180" instance-acquisition-timeout-unit="SECONDS"/>
-                    <strict-max-pool name="wef-mdb-max-pool" max-pool-size="5" instance-acquisition-timeout="180" instance-acquisition-timeout-unit="SECONDS"/>
-                    <strict-max-pool name="onl-email-chunk-mdb-max-pool" max-pool-size="5" instance-acquisition-timeout="180" instance-acquisition-timeout-unit="SECONDS"/>
+                    <strict-max-pool name="mdb-strict-max-pool" derive-size="from-cpu-count" instance-acquisition-timeout="5" instance-acquisition-timeout-unit="MINUTES"/>
+                    <strict-max-pool name="slsb-strict-max-pool" derive-size="from-worker-pools" instance-acquisition-timeout="5" instance-acquisition-timeout-unit="MINUTES"/>
                 </bean-instance-pools>
             </pools>
             <caches>
                 <cache name="simple"/>
-                <cache name="distributable" passivation-store-ref="infinispan"/>
+                <cache name="distributable" passivation-store-ref="infinispan" aliases="passivating clustered"/>
             </caches>
             <passivation-stores>
-                <passivation-store name="infinispan" cache-container="ejb" bean-cache="default" max-size="10000"/>
-                <file-passivation-store name="file"/>
+                <passivation-store name="infinispan" cache-container="ejb" max-size="10000"/>
             </passivation-stores>
             <async thread-pool-name="default"/>
             <timer-service thread-pool-name="default" default-data-store="file-data-store">
@@ -565,7 +525,7 @@
                 <smtp-server outbound-socket-binding-ref="mail-smtp"/>
             </mail-session>
         </subsystem>
-    <!--    <subsystem xmlns="urn:jboss:domain:messaging-activemq:8.0">
+        <subsystem xmlns="urn:jboss:domain:messaging-activemq:8.0">
             <server name="default" persistence-enabled="true">
                 <security domain="JMSLogin"/>
                 <journal type="NIO" min-files="2"/>
@@ -591,7 +551,7 @@
                     <outbound-config allow-local-transactions="true"/>
                 </pooled-connection-factory>
             </server>
-        </subsystem>-->
+        </subsystem>
         <subsystem xmlns="urn:wildfly:microprofile-config-smallrye:1.0"/>
         <subsystem xmlns="urn:wildfly:microprofile-health-smallrye:2.0" security-enabled="false" empty-liveness-checks-status="${env.MP_HEALTH_EMPTY_LIVENESS_CHECKS_STATUS:UP}" empty-readiness-checks-status="${env.MP_HEALTH_EMPTY_READINESS_CHECKS_STATUS:UP}"/>
         <subsystem xmlns="urn:wildfly:microprofile-metrics-smallrye:2.0" security-enabled="false" exposed-subsystems="*" prefix="${wildfly.metrics.prefix:jboss}"/>
