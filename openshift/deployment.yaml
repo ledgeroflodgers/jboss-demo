@@ -88,8 +88,6 @@ spec:
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           volumeMounts:
-            - mountPath: /apps/csp/config/
-              name: volume-csp-pt-properties
             - mountPath: /apps/foundation/csp_onl/unity/conf/
               name: volume-unity-config
             - mountPath: /apps/csp/config/
@@ -138,7 +136,7 @@ spec:
               - configMap:
                   name: unity-auth-bt
             defaultMode: 420
-         - name: volume-csp-bt-properties
+        - name: volume-csp-bt-properties
           configMap:
             name: csp-bt
             defaultMode: 420
