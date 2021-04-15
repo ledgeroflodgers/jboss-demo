@@ -262,6 +262,11 @@
                     <file-data-store name="file-data-store" path="timer-service-data" relative-to="jboss.server.data.dir"/>
                 </data-stores>
             </timer-service>
+            <remote connector-ref="http-remoting-connector" thread-pool-name="csp-remoting-thread-pool">
+                <channel-creation-options>
+                    <option name="MAX_OUTBOUND_MESSAGES" value="1234" type="remoting"/>
+                </channel-creation-options>
+            </remote>
             <thread-pools>
                 <thread-pool name="default">
                     <max-threads count="30"/>
@@ -673,6 +678,7 @@
         </interface>
     </interfaces>
     <socket-binding-group name="standard-sockets" default-interface="public" port-offset="${jboss.socket.binding.port-offset:0}">
+        <socket-binding name="remoting" port="4447"/>
         <socket-binding name="ajp" port="${jboss.ajp.port:8009}"/>
         <socket-binding name="http" port="${jboss.http.port:8080}"/>
         <socket-binding name="https" port="${jboss.https.port:8443}"/>
