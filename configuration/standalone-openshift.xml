@@ -44,6 +44,14 @@
         <extension module="org.wildfly.extension.undertow"/>
         <extension module="org.wildfly.iiop-openjdk"/>
     </extensions>
+    <system-properties>
+        <property name="org.apache.catalina.session.ManagerBase.SESSION_ID_ALPHABET" value="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AB"/>
+        <property name="jackson.deserialization.whitelist.packages" value="ca.teranet" />
+    </system-properties>
+    <vault code="ca.teranet.csp.business.services.CSPPasswordVault" module="ca_teranet_ldap">
+        <vault-option name="cspejb" value="uid=csp_bt_super_user,${env.CSP_LDAP_DN}"/>
+        <vault-option name="cspjms" value="uid=cspreceiver,${env.CSP_LDAP_DN}"/>
+    </vault>
     <management>
         <security-realms>
             <security-realm name="ManagementRealm">
