@@ -34,7 +34,7 @@
         <extension module="org.wildfly.extension.ee-security"/>
         <extension module="org.wildfly.extension.elytron"/>
         <extension module="org.wildfly.extension.io"/>
-        <extension module="org.wildfly.extension.messaging-activemq"/>
+<!--        <extension module="org.wildfly.extension.messaging-activemq"/>-->
         <extension module="org.wildfly.extension.microprofile.config-smallrye"/>
         <extension module="org.wildfly.extension.microprofile.health-smallrye"/>
         <extension module="org.wildfly.extension.microprofile.metrics-smallrye"/>
@@ -565,7 +565,7 @@
                 <smtp-server outbound-socket-binding-ref="mail-smtp"/>
             </mail-session>
         </subsystem>
-        <subsystem xmlns="urn:jboss:domain:messaging-activemq:8.0">
+    <!--    <subsystem xmlns="urn:jboss:domain:messaging-activemq:8.0">
             <server name="default" persistence-enabled="true">
                 <security domain="JMSLogin"/>
                 <journal type="NIO" min-files="2"/>
@@ -591,7 +591,7 @@
                     <outbound-config allow-local-transactions="true"/>
                 </pooled-connection-factory>
             </server>
-        </subsystem>
+        </subsystem>-->
         <subsystem xmlns="urn:wildfly:microprofile-config-smallrye:1.0"/>
         <subsystem xmlns="urn:wildfly:microprofile-health-smallrye:2.0" security-enabled="false" empty-liveness-checks-status="${env.MP_HEALTH_EMPTY_LIVENESS_CHECKS_STATUS:UP}" empty-readiness-checks-status="${env.MP_HEALTH_EMPTY_READINESS_CHECKS_STATUS:UP}"/>
         <subsystem xmlns="urn:wildfly:microprofile-metrics-smallrye:2.0" security-enabled="false" exposed-subsystems="*" prefix="${wildfly.metrics.prefix:jboss}"/>
