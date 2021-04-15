@@ -48,10 +48,6 @@
         <property name="org.apache.catalina.session.ManagerBase.SESSION_ID_ALPHABET" value="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AB"/>
         <property name="jackson.deserialization.whitelist.packages" value="ca.teranet" />
     </system-properties>
-    <vault code="ca.teranet.csp.business.services.CSPPasswordVault" module="ca_teranet_ldap">
-        <vault-option name="cspejb" value="uid=csp_bt_super_user,${env.CSP_LDAP_DN}"/>
-        <vault-option name="cspjms" value="uid=cspreceiver,${env.CSP_LDAP_DN}"/>
-    </vault>
     <management>
         <security-realms>
             <security-realm name="ManagementRealm">
@@ -575,67 +571,6 @@
         <subsystem xmlns="urn:jboss:domain:sar:1.0"/>
         <subsystem xmlns="urn:jboss:domain:security:2.0">
             <security-domains>
-                <security-domain name="jmx-console">
-                    <authentication>
-                        <login-module code="ca.teranet.ldap.authentication.jboss.LdapCustomLoginModule" flag="required" module="ca_teranet_ldap">
-                            <module-option name="configFile" value="${env.PASSWORD_CONF}"/>
-                            <module-option name="baseDNPrefix" value="uid="/>
-                            <module-option name="baseDNSuffix" value=",${env.CSP_LDAP_DN}"/>
-                            <module-option name="allowEmptyPasswords" value="false"/>
-                            <module-option name="ignorePasswordCase" value="false"/>
-                        </login-module>
-                    </authentication>
-                </security-domain>
-                <security-domain name="EncryptedCSPDBPassword">
-                    <authentication>
-                        <login-module code="ca.teranet.ldap.authentication.jboss.LdapSecureIdentityLoginModule" flag="required" module="csp-bt-lib">
-                            <module-option name="username" value="${env.CSP_DB_USER}"/>
-                            <module-option name="configFile" value="${env.PASSWORD_CONF}"/>
-                            <module-option name="userDn" value="uid=${env.CSP_DB_DN},${env.CSP_LDAP_DN}"/>
-                            <module-option name="managedConnectionFactoryName" value="jboss.jca:name=cspDSXA,service=XATxCM"/>
-                        </login-module>
-                    </authentication>
-                </security-domain>
-                <security-domain name="client-login" cache-type="default">
-                    <authentication>
-                        <login-module code="ca.teranet.csp.business.services.BTLoginModule" flag="sufficient" module="ca_teranet_ldap"/>
-                        <login-module code="org.jboss.security.ClientLoginModule" flag="optional">
-                            <module-option name="restore-login-identity" value="true"/>
-                            <module-option name="multi-threaded" value="true"/>
-                        </login-module>
-                    </authentication>
-                </security-domain>
-                <security-domain name="CSPBTLogin">
-                    <authentication>
-                        <login-module code="ca.teranet.csp.business.services.BTLoginModule" flag="sufficient" module="ca_teranet_ldap"/>
-                        <login-module code="ca.teranet.unity.auth.jboss.UnityLoginModule" flag="required">
-                            <module-option name="ExternalDefined1" value="customercare->Unity_Framework"/>
-                            <module-option name="ExternalDefined2" value="application->Unity_JDBC_ConnPool"/>
-                            <module-option name="Admin_User" value="system"/>
-                            <module-option name="Admin_groups" value="customercare,prodadmin,application"/>
-                        </login-module>
-                    </authentication>
-                </security-domain>
-                <security-domain name="JMSLogin">
-                    <authentication>
-                        <login-module code="ca.teranet.csp.business.services.JMSLoginModule" flag="required" module="ca_teranet_ldap">
-                            <module-option name="consumerUsername" value="CspReceiver"/>
-                            <module-option name="consumerPassword" value="${VAULT::cspjms::password::1}"/>
-                            <module-option name="consumerRole" value="receiver"/>
-                            <module-option name="producerRole" value="sender"/>
-                        </login-module>
-                    </authentication>
-                </security-domain>
-                <security-domain name="unity" cache-type="default">
-                    <authentication>
-                        <login-module code="ca.teranet.unity.auth.jboss.UnityLoginModule" flag="required">
-                            <module-option name="ExternalDefined1" value="customercare->Unity_Framework"/>
-                            <module-option name="ExternalDefined2" value="application->Unity_JDBC_ConnPool"/>
-                            <module-option name="Admin_User" value="system"/>
-                            <module-option name="Admin_groups" value="customercare,prodadmin,application"/>
-                        </login-module>
-                    </authentication>
-                </security-domain>
                 <security-domain name="other" cache-type="default">
                     <authentication>
                         <login-module code="Remoting" flag="optional">
@@ -650,6 +585,14 @@
                     <authorization>
                         <policy-module code="Delegating" flag="required"/>
                     </authorization>
+                </security-domain>
+                <security-domain name="jaspitest" cache-type="default">
+                    <authentication-jaspi>
+                        <login-module-stack name="dummy">
+                            <login-module code="Dummy" flag="optional"/>
+                        </login-module-stack>
+                        <auth-module code="Dummy"/>
+                    </authentication-jaspi>
                 </security-domain>
                 <security-domain name="jboss-ejb-policy" cache-type="default">
                     <authorization>
