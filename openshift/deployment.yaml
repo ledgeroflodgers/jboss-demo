@@ -29,20 +29,50 @@ spec:
     spec:
       containers:
         - env:
-            - name: EAP_HOME
-              value: /opt/eap
-            - name: JAVA_OPTS_APPEND
+            - name: CSP_LDAP_DN
+              value: 'cn=DEV,ou=CSP,ou=private-ldap,dc=teranet-private,dc=ca'
+            - name: CSP_BT_DN
               value: >-
-                -DpropertiesTestFile=/opt/eap/standalone/configuration/sample.properties
-                -DpropertiesBaseFile=/apps/csp/config/csp-pt.properties
-                -DpropertiesErrorMessageFile=/apps/csp/config/bt/validation-bt.properties 
+                uid=csp_bt_super_user,cn=DEV,ou=CSP,ou=private-ldap,dc=teranet-private,dc=ca
             - name: onland_csp_openldap_lookup_password
               valueFrom:
                 secretKeyRef:
-                  key: onland_csp_openldap_lookup_password
                   name: onland-csp-openldap-lookup-password
+                  key: onland_csp_openldap_lookup_password
+            - name: CSP_DB_URL1
+              value: >-
+                jdbc:oracle:thin:@//mssctsdbuxdv02.corp.teranet.ca:3031/CSP01DPDB
+            - name: CSP_DB_URL2
+              value: >-
+                jdbc:oracle:thin:@//mssctsdbuxdv02.corp.teranet.ca:3031/CSP01DPDB
+            - name: CSP_DB_USER
+              value: CSP_ONL2_APP
+            - name: CSP_DB_DN
+              value: CSP_ONL_APP
+            - name: PASSWORD_CONF
+              value: /apps/foundation/csp_onl/ldap/config/password.conf
+            - name: JAVA_OPTS_APPEND
+              value: >-
+                -DpropertiesBaseFile=/apps/csp/config/csp-bt.properties
+                -DpropertiesErrorMessageFile=/apps/csp/config/bt/validation-bt.properties
+                -DlogFilePropertyPath=/opt/eap/standalone/configuration
+                -Dlog4j.configurationFile=/opt/eap/standalone/configuration/log4j2-csp-bt.xml
+                -Dmdb.user.pwd=password
+                -Dunity.properties.location=/apps/foundation/csp_onl/unity/conf
+                -Djava.locale.providers=COMPAT
+                -DpropertiesTestFile=/opt/eap/standalone/configuration/sample.properties
+            - name: EAP_HOME
+              value: /opt/eap
+            - name: EJB_HOST
+              value: onland-bt-app-onland-csp-dev-2.apps.mssocp4uat.corp.teranet.ca
+            - name: EJB_USER
+              value: csp_bt_super_user
+            - name: SCRIPT_DEBUG
+              value: 'true'
             - name: JBOSS_VERSION
-              value: 7.2.9
+              value: 7.3.6
+            - name: DISABLE_EMBEDDED_JMS_BROKER
+              value: "true"
           image: >-
             onland-csp-docker-snapshot.artifactory.corp.teranet.ca/onland-test:v1.0
           imagePullPolicy: Always
@@ -58,8 +88,10 @@ spec:
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           volumeMounts:
+            - mountPath: /apps/foundation/csp_onl/unity/conf/
+              name: volume-unity-config
             - mountPath: /apps/csp/config/
-              name: volume-csp-pt-properties
+              name: volume-csp-bt-properties
             - mountPath: /apps/csp/config/bt/
               name: volume-validation-bt-properties
             - mountPath: /apps/foundation/csp_onl/ldap/config/
@@ -94,6 +126,20 @@ spec:
                   name: password
               - configMap:
                   name: dnlist
+        - name: volume-unity-config
+          projected:
+            sources:
+              - configMap:
+                  name: cart-bt
+              - configMap:
+                  name: unity-bt
+              - configMap:
+                  name: unity-auth-bt
+            defaultMode: 420
+        - name: volume-csp-bt-properties
+          configMap:
+            name: csp-bt
+            defaultMode: 420
         - name: volume-cspstore
           secret:
             secretName: cspstore
