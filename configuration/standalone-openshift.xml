@@ -70,12 +70,13 @@
                     </ssl>
                 </server-identities>
                 <authentication>
-                    <local default-user="$local" allowed-users="*" skip-group-loading="true"/>
-                    <properties path="application-users.properties" relative-to="jboss.server.config.dir"/>
+                    <jaas name="CSPBTLogin"/>
                 </authentication>
-                <authorization>
-                    <properties path="application-roles.properties" relative-to="jboss.server.config.dir"/>
-                </authorization>
+            </security-realm>
+            <security-realm name="ejb-security-realm">
+                <server-identities>
+                    <secret value="${VAULT::cspejb::password::1}"/>
+                </server-identities>
             </security-realm>
         </security-realms>
         <audit-log>
