@@ -235,8 +235,8 @@
             </remote>
             <thread-pools>
                 <thread-pool name="default">
-                    <max-threads count="10"/>
-                    <keepalive-time time="60" unit="seconds"/>
+                    <max-threads count="30"/>
+                    <keepalive-time time="100" unit="milliseconds"/>
                 </thread-pool>
             </thread-pools>
             <iiop enable-by-default="false" use-qualified-name="false"/>
