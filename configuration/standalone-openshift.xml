@@ -262,11 +262,6 @@
                     <file-data-store name="file-data-store" path="timer-service-data" relative-to="jboss.server.data.dir"/>
                 </data-stores>
             </timer-service>
-            <remote connector-ref="http-remoting-connector" thread-pool-name="csp-remoting-thread-pool">
-                <channel-creation-options>
-                    <option name="MAX_OUTBOUND_MESSAGES" value="1234" type="remoting"/>
-                </channel-creation-options>
-            </remote>
             <thread-pools>
                 <thread-pool name="default">
                     <max-threads count="30"/>
@@ -279,7 +274,7 @@
             </thread-pools>
             <iiop enable-by-default="true" use-qualified-name="true"/>
             <in-vm-remote-interface-invocation pass-by-value="false"/>
-            <default-security-domain value="CSPBTLogin"/>
+            <default-security-domain value="other"/>
             <default-missing-method-permissions-deny-access value="false"/>
             <disable-default-ejb-permissions value="false"/>
             <enable-graceful-txn-shutdown value="false"/>
