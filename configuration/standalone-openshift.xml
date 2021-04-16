@@ -82,11 +82,11 @@
                     <jaas name="CSPBTLogin"/>
                 </authentication>
             </security-realm>
-          <!--  <security-realm name="ejb-security-realm">
+           <security-realm name="ejb-security-realm">
                 <server-identities>
                     <secret value="${VAULT::cspejb::password::1}"/>
                 </server-identities>
-            </security-realm>-->
+            </security-realm>
         </security-realms>
         <audit-log>
             <formatters>
@@ -120,7 +120,7 @@
     <profile>
         <subsystem xmlns="urn:jboss:domain:logging:8.0">
             <console-handler name="CONSOLE">
-                <level name="DEBUG"/>
+                <level name="TRACE"/>
                 <formatter>
                     <named-formatter name="PATTERN"/>
                 </formatter>
@@ -132,13 +132,13 @@
                 <level name="WARN"/>
             </logger>
             <logger category="org.jboss.as.config">
-                <level name="DEBUG"/>
+                <level name="TRACE"/>
             </logger>
             <logger category="sun.rmi">
                 <level name="WARN"/>
             </logger>
             <root-logger>
-                <level name="DEBUG"/>
+                <level name="TRACE"/>
                 <handlers>
                     <handler name="CONSOLE"/>
                 </handlers>
