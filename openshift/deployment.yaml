@@ -68,7 +68,7 @@ spec:
             - name: EJB_USER
               value: csp_bt_super_user
             - name: SCRIPT_DEBUG
-              value: 'true'
+              value: 'false'
             - name: JBOSS_VERSION
               value: 7.3.6
             - name: DISABLE_EMBEDDED_JMS_BROKER
