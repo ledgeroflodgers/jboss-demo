@@ -11,6 +11,9 @@
         <Logger name="ca.teranet" level="trace" additivity="false">
             <AppenderRef ref="LogToConsole"/>
         </Logger>
+        <Logger name="ca.on.teranet" level="trace" additivity="false">
+            <AppenderRef ref="LogToConsole"/>
+        </Logger>
         <!-- Root level is configuration for the root logger, 
                 it will apply the error log level for all logs except the ones configured in separate Loggers like for ca.teranet -->
         <Root level="debug">
