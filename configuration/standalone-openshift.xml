@@ -63,7 +63,7 @@
                     <properties path="mgmt-groups.properties" relative-to="jboss.server.config.dir"/>
                 </authorization>
             </security-realm>
-            <security-realm name="ApplicationRealm">
+<!--             <security-realm name="ApplicationRealm">
                 <server-identities>
                     <ssl>
                         <keystore path="application.keystore" relative-to="jboss.server.config.dir" keystore-password="password" alias="server" key-password="password" generate-self-signed-certificate-host="localhost"/>
@@ -76,12 +76,12 @@
                 <authorization>
                     <properties path="application-roles.properties" relative-to="jboss.server.config.dir"/>
                 </authorization>
-            </security-realm>
-          <!--  <security-realm name="ApplicationRealm">
+            </security-realm> -->
+           <security-realm name="ApplicationRealm">
                 <authentication>
                     <jaas name="CSPBTLogin"/>
                 </authentication>
-            </security-realm>-->
+            </security-realm>
           <!--  <security-realm name="ejb-security-realm">
                 <server-identities>
                     <secret value="${VAULT::cspejb::password::1}"/>
