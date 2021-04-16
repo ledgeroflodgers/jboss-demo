@@ -1,72 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="DEBUG" monitorInterval="5">
-
+<Configuration status="DEBUG">
     <Appenders>
-        <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        <Console name="LogToConsole" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
     </Appenders>
-
     <Loggers>
-        <Logger name="Firma.System" level="ERROR">
-            <AppenderRef ref="Console" level="ERROR"/>
+        <!-- avoid duplicated logs with additivity=false -->
+        <Logger name="ca.teranet" level="debug" additivity="false">
+            <AppenderRef ref="LogToConsole"/>
         </Logger>
-        <Logger name="Firma.Transaction" level="INFO">
-            <AppenderRef ref="Console" level="INFO"/>
-        </Logger>
-        <Logger name="Firma.Exception" level="ERROR">
-            <AppenderRef ref="Console" level="ERROR"/>
-        </Logger>
-        <Logger name="Firma.Trace" level="ERROR">
-            <AppenderRef ref="Console" level="ERROR"/>
-        </Logger>
-        <Logger name="Firma.AuditConsumer" level="INFO">
-            <AppenderRef ref="Console" level="INFO"/>
-        </Logger>
-        <Logger name="Firma.AuditAdministrative" level="INFO">
-            <AppenderRef ref="Console" level="INFO"/>
-        </Logger>
-        <Logger name="Firma.CustomerCare" level="INFO">
-            <AppenderRef ref="Console" level="INFO"/>
-        </Logger>
-        <Logger name="Firma.ProductAdmin" level="INFO">
-            <AppenderRef ref="Console" level="INFO"/>
-        </Logger>
-        <Logger name="Firma.ShoppingCart" level="INFO">
-            <AppenderRef ref="Console" level="INFO"/>
-        </Logger>
-        <Logger name="Firma.EventLog" level="INFO">
-            <AppenderRef ref="Console" level="INFO"/>
-        </Logger>
-        <Logger name="Firma.CPSService" level="INFO">
-            <AppenderRef ref="Console" level="INFO"/>
-        </Logger>
-        <Logger name="Firma.WSSecurity" level="INFO">
-            <AppenderRef ref="Console" level="INFO"/>
-        </Logger>
-        <Logger name="Firma.WSTrace" level="INFO">
-            <AppenderRef ref="Console" level="INFO"/>
-        </Logger>
-        <Logger name="Firma.WSException" level="INFO">
-            <AppenderRef ref="Console" level="INFO"/>
-        </Logger>
-
-        <Logger name="ca.teranet" level="DEBUG">
-            <AppenderRef ref="Console" level="DEBUG"/>
-        </Logger>
-        <Logger name="ca.on.teranet" level="DEBUG">
-            <AppenderRef ref="Console" level="DEBUG"/>
-        </Logger>
-        <Logger name="Csp.System" level="DEBUG">
-            <AppenderRef ref="Console" level="DEBUG"/>
-        </Logger>
-        <Logger name="Csp.Exception" level="ERROR">
-            <AppenderRef ref="Console" level="ERROR"/>
-        </Logger>
-
-        <Root level="DEBUG">
-            <AppenderRef ref="Console"/>
+        <Root level="error">
+            <AppenderRef ref="LogToConsole"/>
         </Root>
     </Loggers>
-
 </Configuration>
