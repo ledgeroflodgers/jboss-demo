@@ -1,0 +1,11 @@
+RULE sendException
+CLASS org.wildfly.httpclient.common.HttpServerHelper
+METHOD sendException
+AT ENTRY
+IF TRUE
+DO
+   traceln("=== Start Byteman logging ===");
+   traceln("Exception: " + $3.toString());
+   $3.printStackTrace();
+   traceln("=== End Byteman logging ===");
+ENDRULE
