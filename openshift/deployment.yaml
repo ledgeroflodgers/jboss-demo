@@ -61,8 +61,8 @@ spec:
                 -Dunity.properties.location=/apps/foundation/csp_onl/unity/conf
                 -Djava.locale.providers=COMPAT
                 -DpropertiesTestFile=/opt/eap/standalone/configuration/sample.properties
-                -Dorg.jboss.byteman.transform.all=true 
-                -Djboss.modules.system.pkgs=org.jboss.byteman,org.jboss.logmanager 
+                -Dorg.jboss.byteman.transform.all=true
+                -Djboss.modules.system.pkgs=org.jboss.byteman,org.jboss.logmanager
                 -javaagent:/opt/eap/standalone/configuration/byteman/byteman.jar=script:/opt/eap/standalone/configuration/byteman/02901492.btm,sys:/opt/eap/standalone/configuration/byteman/byteman.jar
             - name: EAP_HOME
               value: /opt/eap
