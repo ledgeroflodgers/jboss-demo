@@ -111,9 +111,6 @@
                     <named-formatter name="PATTERN"/>
                 </formatter>
             </console-handler>
-            <logger category="com.arjuna">
-                <level name="WARN"/>
-            </logger>
             <logger category="io.jaegertracing.Configuration">
                 <level name="WARN"/>
             </logger>
