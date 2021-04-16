@@ -92,43 +92,24 @@
                 <level name="WARN"/>
             </logger>
             <logger category="org.jboss.as.config">
-                <level name="TRACE"/>
-            </logger>
-              <logger category="ca.on.teranet">
-                <level name="TRACE"/>
-            </logger>
-            <logger category="ca.teranet">
-                <level name="TRACE"/>
-            </logger>
+                <level name="WARN"/>
             <logger category="com.arjuna">
-                <level name="TRACE"/>
+                <level name="ERROR"/>
             </logger>
-
-            <!--remove this after upgradeing to jboss 7.2.10-->
             <logger category="org.apache.activemq.">
-                <level name="TRACE"/>
-            </logger>
-
-            <logger category="io.">
-                <level name="TRACE"/>
-            </logger>
-            <logger category="org.">
-                <level name="TRACE"/>
-            </logger>
-            <logger category="com.">
-                <level name="TRACE"/>
+                <level name="ERROR"/>
             </logger>
             <logger category="javax.">
-                <level name="TRACE"/>
+                <level name="WARN"/>
             </logger>
             <logger category="sun.rmi">
                 <level name="WARN"/>
             </logger>
             <logger category="stdout">
-                <level name="TRACE"/>
+                <level name="DEBUG"/>
             </logger>
             <root-logger>
-                <level name="TRACE"/>
+                <level name="ERROR"/>
                 <handlers>
                     <handler name="CONSOLE"/>
                 </handlers>
