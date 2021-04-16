@@ -123,6 +123,9 @@
             <logger category="sun.rmi">
                 <level name="WARN"/>
             </logger>
+            <logger category="stdout">
+                <level name="TRACE"/>
+            </logger>
             <root-logger>
                 <level name="TRACE"/>
                 <handlers>
