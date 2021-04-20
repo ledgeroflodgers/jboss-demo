@@ -103,7 +103,7 @@
             <console-handler name="CONSOLE">
                 <level name="DEBUG"/>
                 <formatter>
-                    <named-formatter name="OPENSHIFT"/>
+                    <named-formatter name="COLOR-PATTERN"/>
                 </formatter>
             </console-handler>
 
@@ -721,11 +721,5 @@
         <outbound-socket-binding name="mail-smtp">
             <remote-destination host="localhost" port="25"/>
         </outbound-socket-binding>
-        <!--        <outbound-socket-binding name="remote-ejb-mrk">
-                    <remote-destination host="localhost" port="4447"/>
-                </outbound-socket-binding>
-                <outbound-socket-binding name="remote-ejb-mss">
-                    <remote-destination host="localhost" port="4447"/>
-                </outbound-socket-binding>-->
     </socket-binding-group>
 </server>
