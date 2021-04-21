@@ -205,6 +205,11 @@
                 <passivation-store name="infinispan" cache-container="ejb" max-size="10000"/>
             </passivation-stores>
             <async thread-pool-name="default"/>
+            <timer-service thread-pool-name="default" default-data-store="default-file-store">
+                <data-stores>
+                    <file-data-store name="default-file-store" path="timer-service-data" relative-to="jboss.server.data.dir"/>
+                </data-stores>
+            </timer-service>
             <remote connector-ref="http-remoting-connector" thread-pool-name="default">
                 <channel-creation-options>
                     <option name="MAX_OUTBOUND_MESSAGES" value="1234" type="remoting"/>
@@ -413,6 +418,7 @@
             <stacks>
                 <stack name="tcp">
                     <transport type="TCP" socket-binding="jgroups-tcp"/>
+                    <protocol type="kubernetes.KUBE_PING"/>
                     <protocol type="MERGE3"/>
                     <protocol type="FD_SOCK"/>
                     <protocol type="FD_ALL"/>
@@ -426,6 +432,7 @@
                 </stack>
                 <stack name="udp">
                     <transport type="UDP" socket-binding="jgroups-udp"/>
+                    <protocol type="kubernetes.KUBE_PING"/>
                     <protocol type="MERGE3"/>
                     <protocol type="FD_SOCK"/>
                     <protocol type="FD_ALL"/>
