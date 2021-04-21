@@ -19,7 +19,7 @@ spec:
   runPolicy: Serial
   source:
     git:
-      ref: eap73-full-ha
+      ref: eap73-migration
       uri: 'https://github.com/ledgeroflodgers/jboss-demo.git'
     sourceSecret:
       name: texdvbuild
