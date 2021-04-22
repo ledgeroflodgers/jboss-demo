@@ -140,7 +140,7 @@ spec:
             - name: JBOSS_VERSION
               value: 7.3.6
             - name: DISABLE_EMBEDDED_JMS_BROKER
-              value: "true"
+              value: "false"
           image: >-
             onland-csp-docker-snapshot.artifactory.corp.teranet.ca/onland-test:v1.0
           imagePullPolicy: Always
