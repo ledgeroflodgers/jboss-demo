@@ -46,7 +46,7 @@
         <property name="spring.config.location" value="file:/apps/foundation/csp_onl/props/"/>
     </system-properties>
     <vault code="ca.teranet.csp.business.services.CSPPasswordVault" module="ca_teranet_ldap">
-        <vault-option name="cspejb" value="${env.CSP_BT_DN}"/>
+        <vault-option name="cspejb" value="uid=csp_bt_super_user,cn=DEV,ou=CSP,ou=private-ldap,dc=teranet-private,dc=ca"/>
     </vault>
     <management>
         <security-realms>
@@ -422,6 +422,16 @@
             <jpa default-datasource="" default-extended-persistence-inheritance="DEEP"/>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:jsf:1.1"/>
+        <subsystem xmlns="urn:wildfly:microprofile-config-smallrye:1.0"/>
+        <subsystem xmlns="urn:wildfly:microprofile-health-smallrye:2.0" security-enabled="false" empty-liveness-checks-status="${env.MP_HEALTH_EMPTY_LIVENESS_CHECKS_STATUS:UP}" empty-readiness-checks-status="${env.MP_HEALTH_EMPTY_READINESS_CHECKS_STATUS:UP}"/>
+        <subsystem xmlns="urn:wildfly:microprofile-metrics-smallrye:2.0" security-enabled="false" exposed-subsystems="*" prefix="${wildfly.metrics.prefix:jboss}"/>
+        <subsystem xmlns="urn:jboss:domain:modcluster:5.0">
+            <proxy name="default" advertise-socket="modcluster" listener="ajp">
+                <dynamic-load-provider>
+                    <load-metric type="cpu"/>
+                </dynamic-load-provider>
+            </proxy>
+        </subsystem>
         <subsystem xmlns="urn:jboss:domain:naming:2.0">
             <remote-naming/>
         </subsystem>
@@ -430,6 +440,7 @@
             <!--			<http-connector name="http-remoting-connector" connector-ref="default" security-realm="ApplicationRealm"/>-->
             <connector name="remoting-connector" socket-binding="remoting" security-realm="ApplicationRealm" />
         </subsystem>
+        <subsystem xmlns="urn:jboss:domain:request-controller:1.0"/>
         <subsystem xmlns="urn:jboss:domain:resource-adapters:5.0"/>
         <subsystem xmlns="urn:jboss:domain:sar:1.0"/>
         <subsystem xmlns="urn:jboss:domain:security:2.0">
@@ -439,7 +450,7 @@
                         <login-module code="ca.teranet.ldap.authentication.jboss.LdapCustomLoginModule" flag="required" module="ca_teranet_ldap">
                             <module-option name="configFile" value="/apps/foundation/csp_onl/ldap/config/password.conf"/>
                             <module-option name="baseDNPrefix" value="uid="/>
-                            <module-option name="baseDNSuffix" value="${env.CSP_DN}"/>
+                            <module-option name="baseDNSuffix" value=",cn=DEV,ou=CSP,ou=private-ldap,dc=teranet-private,dc=ca"/>
                             <module-option name="allowEmptyPasswords" value="false"/>
                             <module-option name="ignorePasswordCase" value="false"/>
                         </login-module>
@@ -477,10 +488,12 @@
             <coordinator-environment default-timeout="300"/>
             <object-store relative-to="jboss.server.data.dir"/>
         </subsystem>
-        <subsystem xmlns="urn:jboss:domain:undertow:7.0" default-virtual-host="default-host">
+        <subsystem xmlns="urn:jboss:domain:undertow:10.0" default-server="default-server" default-virtual-host="default-host" default-servlet-container="default" default-security-domain="other" statistics-enabled="${wildfly.undertow.statistics-enabled:${wildfly.statistics-enabled:false}}">
             <buffer-cache name="default"/>
             <server name="default-server" default-host="default-host">
-                <http-listener name="http" max-post-size="31457280" socket-binding="http" url-charset="UTF-8"/>
+                <ajp-listener name="ajp" socket-binding="ajp"/>
+                <http-listener name="default" socket-binding="http" redirect-socket="https" proxy-address-forwarding="true" enable-http2="true"/>
+                <!--http-listener name="http" max-post-size="31457280" socket-binding="http" url-charset="UTF-8"/-->
                 <!--                <http-listener name="http" socket-binding="http"/>-->
                 <host name="default-host" alias="localhost,example.com">
                     <location name="/" handler="welcome-content"/>
@@ -533,12 +546,14 @@
         </interface>
     </interfaces>
     <socket-binding-group name="standard-sockets" default-interface="public" port-offset="${jboss.socket.binding.port-offset:0}">
+        <socket-binding name="ajp" interface="bindall" port="${jboss.ajp.port:8009}"/>
         <socket-binding name="http" interface="bindall" port="${jboss.http.port:8080}"/>
         <socket-binding name="https" interface="bindall" port="${jboss.https.port:8443}"/>
         <socket-binding name="jgroups-mping" interface="private" multicast-address="${jboss.default.multicast.address:230.0.0.4}" multicast-port="45700"/>
         <socket-binding name="jgroups-tcp" interface="private" port="7600"/>
         <socket-binding name="jgroups-udp" interface="private" port="55200" multicast-address="${jboss.default.multicast.address:230.0.0.4}" multicast-port="45688"/>
         <socket-binding name="management-http" interface="management" port="${jboss.management.http.port:9990}"/>
+        <socket-binding name="management-native" interface="management" port="${jboss.management.native.port:9999}"/>
         <socket-binding name="management-https" interface="management" port="${jboss.management.https.port:9993}"/>
         <socket-binding name="modcluster" multicast-address="${jboss.modcluster.multicast.address:224.0.1.105}" multicast-port="23364"/>
         <socket-binding name="remoting" port="4447"/>
