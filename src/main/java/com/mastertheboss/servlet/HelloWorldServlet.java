@@ -23,8 +23,10 @@ public class HelloWorldServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request,
                          HttpServletResponse response) throws ServletException, IOException {
         String fileName = System.getProperty("propertiesTestFile");
+        String mdb = System.getProperty("mdb.user.pwd");
+        
         System.out.println("&&&&&&&&&&& TEST PROPERTY FILE: " + fileName);
-
+ 
         Random rand = new Random(); //instance of random class
         int upperbound = 250000; 
         int int_random = rand.nextInt(upperbound);
@@ -34,7 +36,7 @@ public class HelloWorldServlet extends HttpServlet {
 
         writer.println("<h2 style=" + "\"color:red;\">" + "Run#: " + int_random + "</h2>");
         writer.println("<h3>Test 1) Read form JAVA_OPTS: </h3> <p style=" + "\"color:green;\">" + fileName + "</p>");
-
+        writer.println("<h3>Test 1) Read form mdb.user.pwd: </h3> <p style=" + "\"color:green;\">" + mdb + "</p>");
         //String pass = new Ldap().getPassword();
         //writer.println("<h3>Test 2) Ldap: </h3> <p style=" + "\"color:green;\">" + pass + "</p>");
 
