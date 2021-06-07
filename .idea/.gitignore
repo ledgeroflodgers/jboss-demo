@@ -1,0 +1,43 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Datasource local storage ignored files
+/../../../../../:\Gerrit\Demos\jboss-demo\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# compiled output
+/dist
+/tmp
+
+# dependencies
+node_modules
+bower_components
+
+*.tern-project
+*.jar
+*.factorypath
+*.zip
+*.dll
+*.war
+*.ear
+*.swf
+junit*.properties
+setup/build/
+.classpath
+**/versionHTML/version.jsp
+target/
+**.iml
+**idea
+**out
+*.project
+*.settings
+/push.bat
+applet/build
+*.class
+*.tern-project
+build/
+onland-ui/.metadata/
+!/onland-ui/src/app/historical-books/components/detail/transaction/
+/bin
+/.metadata/
