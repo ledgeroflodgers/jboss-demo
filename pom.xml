@@ -83,6 +83,10 @@
         <csp.version>12.0</csp.version>
         <release.type/>
         <build.number/>
+	<w2j.temp.compile.dir>./compiled</w2j.temp.compile.dir>
+	<w2j.temp.compile.dir.polaris>./compiledpolaris</w2j.temp.compile.dir.polaris>
+	<wsdl.dir>./wsdl</wsdl.dir>
+	<gwh.package>java:ca.teranet.gwh.client</gwh.package>
     </properties>
 
     <dependencyManagement>
