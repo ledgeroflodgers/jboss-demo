@@ -1,0 +1,27 @@
+Attention $(cusFullName): </br>
+
+This message is confirmation that your order was successfully submitted on $(orderDate).</br>
+
+Your Transaction ID number is: $(billableActivityKey)</br>
+
+Teranet Inc.  </br>
+123 Front Street West, Suite 700,</br> 
+Toronto, ON M5J 2M2 </br>
+www.teranet.ca</br>
+
+<a href="http://www.teranetexpress.ca/csp/userRegistration/unsubscribe">I do not wish to receive future emails.</a>.</br></br>
+
+
+
+À l'attention de $(cusFullName): </br>
+
+Ce message est une confirmation de votre commande passée le $(orderDateFrench).</br>
+
+Votre numéro de transaction est: $(billableActivityKey)</br>
+
+Teranet inc. </br>
+123, rue Front Ouest, bureau 700,</br> 
+Toronto (Ontario) M5J 2M2 </br>
+www.teranet.ca .</br>
+
+<a href="http://www.teranetexpress.ca/csp/userRegistration/unsubscribe">Je ne veux plus recevoir de courriels.</a>.</br>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <echo>customize unity ear and install unity and jboss jars in
+									Maven local repository (windows),
+									unity
+									version:6.9.8.13-devops-nomc-ora</echo>
+  <property name="unity.jar.version" value="6.9.8.13-devops-nomc-ora"/>
+  <property name="build.number" value=""/>
+  <property name="release.type" value=""/>
+  <ant antfile="build.xml" target="setup"/>
+</target>
+</project>

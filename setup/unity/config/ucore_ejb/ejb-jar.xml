@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<ejb-jar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd" version="3.1">
+
+    <!--<enterprise-beans>
+        <message-driven>
+            <ejb-name>EmailSenderMessageBean</ejb-name>
+            <ejb-class>ca.teranet.unity.core.ejb.EmailSenderMessageBean</ejb-class>
+            <activation-config>             
+                <activation-config-property>
+                    <activation-config-property-name>user</activation-config-property-name>
+                    <activation-config-property-value>CspReceiver</activation-config-property-value>
+                </activation-config-property>
+                <activation-config-property>
+                    <activation-config-property-name>password</activation-config-property-name>
+                    <activation-config-property-value>${mdb.user.pwd}</activation-config-property-value>
+                </activation-config-property>
+            </activation-config>
+        </message-driven>
+	</enterprise-beans>-->
+	<assembly-descriptor>
+	
+		<security-role>
+			<description>Unity Framework Role</description>
+			<role-name>Unity_Framework</role-name>
+		</security-role>
+
+      <security-role>
+        <description>Unity JDBC Connection Pool Role</description>
+        <role-name>Unity_JDBC_ConnPool</role-name>
+      </security-role>
+      
+		<method-permission>
+			<description>Access to all methods</description>
+			<role-name>Unity_Framework</role-name>
+			<method>
+				<description>Sequencer permissions</description>
+				<ejb-name>Sequencer</ejb-name>
+				<method-name>*</method-name>
+			</method>
+			<method>
+				<description>EmailSenderController permissions</description>
+				<ejb-name>EmailSenderController</ejb-name>
+				<method-name>*</method-name>
+			</method>
+			<method>
+				<description>EmailSenderMessageBean permissions</description>
+				<ejb-name>EmailSenderMessageBean</ejb-name>
+				<method-name>*</method-name>
+			</method>
+
+		</method-permission>
+	</assembly-descriptor>
+</ejb-jar>

@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FirmaConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FirmaConfig.xsd">
+	<!--
+       <Module>FileLogger</Module>
+	<Property>
+		<name>Loggers</name>
+		<value>Trace,System,Exception,Transaction,WSTrace</value>
+	</Property>
+       -->
+	<Module>FurmaLogger</Module>
+	<DecryptClassName>ca.teranet.unity.core.UnityPropertySecurer</DecryptClassName> 
+  	<DecryptMethodName>getDecryptedProperty</DecryptMethodName> 
+
+	<Property>
+		<name>FileAppender</name>
+		<value>Trace,System,Exception,Transaction,WSTrace,WSException,WSSecurity,AuditAdministrative,AuditConsumer,CustomerCare,CPSService,ProductAdmin,EventLog,ShoppingCart</value>
+	</Property>
+	<Property>
+		<name>Trace</name>
+		<value>INFO</value>
+	</Property>
+	<Property>
+		<name>System</name>
+		<value>INFO</value>
+	</Property>
+	<Property>
+		<name>Transaction</name>
+		<value>INFO</value>
+	</Property>
+	<Property>
+		<name>Exception</name>
+		<value>INFO</value>
+	</Property>
+	<Property>
+		<name>WSTrace</name>
+		<value>DEBUG</value>
+	</Property>
+  <Property>
+		<name>WSException</name>
+		<value>INFO</value>
+	</Property>
+  <Property>
+		<name>WSSecurity</name>
+		<value>INFO</value>
+	</Property>
+	
+	<Property>
+		<name>AuditAdministrative</name>
+		<value>INFO</value>
+	</Property>
+	<Property>
+		<name>AuditConsumer</name>
+		<value>INFO</value>
+	</Property>
+	
+	<Property>
+		<name>CustomerCare</name>
+		<value>INFO</value>
+	</Property>
+
+	<Property>
+		<name>CPSService</name>
+		<value>INFO</value>
+	</Property>
+
+	<Property>
+		<name>ProductAdmin</name>
+		<value>INFO</value>
+	</Property>
+	
+	<Property>
+		<name>EventLog</name>
+		<value>INFO</value>
+	</Property>			
+	<!-- Unity 5.2 updated and added 
+	<Property>
+		<name>Trace.Layout</name>
+		<value>%-5p -[%t]-[%d] - %m</value>
+	</Property> -->
+	<Property>
+		<name>Trace.Layout</name>
+		<value>%-5p -[%t]-[%d]-[LogCtx: %X{logContext}] - %m</value>
+	</Property>
+	<Property>
+		<name>System.Layout</name>
+		<value>%-5p -[%t]-[%d]-[LogCtx: %X{logContext}] - %m</value>
+	</Property>
+	<Property>
+		<name>Exception.Layout</name>
+		<value>%-5p -[%t]-[%d]-[LogCtx: %X{logContext}] - %m</value>
+	</Property>
+	<Property>
+		<name>Transaction.Layout</name>
+		<value>%-5p -[%t]-[%d]-[LogCtx: %X{logContext}] - %m</value>
+	</Property>
+	<Property>
+		<name>WSTrace.Layout</name>
+		<value>%-5p -[%t]-[%d]-[LogCtx: %X{logContext}] - %m</value>
+	</Property>
+	<Property>
+		<name>WSException.Layout</name>
+		<value>%-5p -[%t]-[%d]-[LogCtx: %X{logContext}] - %m</value>
+	</Property>
+	<Property>
+		<name>WSSecurity.Layout</name>
+		<value>%-5p -[%t]-[%d]-[LogCtx: %X{logContext}] - %m</value>
+	</Property>
+	<Property>
+		<name>AuditAdministrative.Layout</name>
+		<value>%-5p -[%t]-[%d]-[LogCtx: %X{logContext}] - %m</value>
+	</Property>
+	<Property>
+		<name>AuditConsumer.Layout</name>
+		<value>%-5p -[%t]-[%d]-[LogCtx: %X{logContext}] - %m</value>
+	</Property>
+	<Property>
+		<name>CustomerCare.Layout</name>
+		<value>%-5p -[%t]-[%d]-[LogCtx: %X{logContext}] - %m</value>
+	</Property>
+		<Property>
+		<name>CPSService.Layout</name>
+		<value>%-5p -[%t]-[%d]-[LogCtx: %X{logContext}] - %m</value>
+	</Property>
+	<Property>
+		<name>ProductAdmin.Layout</name>
+		<value>%-5p -[%t]-[%d]-[LogCtx: %X{logContext}] - %m</value>
+	</Property>
+	<Property>
+		<name>EventLog.Layout</name>
+		<value>%-5p -[%t]-[%d]-[LogCtx: %X{logContext}] - %m</value>
+	</Property>
+	<Property>
+		<name>ShoppingCart.Layout</name>
+		<value>%-5p -[%t]-[%d]-[LogCtx: %X{logContext}] - %m</value>
+	</Property>	
+	<Property>
+		<name>Trace.RollSize</name>
+		<value>10MB</value>
+	</Property>
+	<Property>
+		<name>Trace.RollFiles</name>
+		<value>5</value>
+	</Property>
+	
+	<Property>
+		<name>WSTrace.Layout</name>
+		<value>%-5p -[%t]-[%d] - %m</value>
+	</Property>
+	<Property>
+		<name>WSTrace.RollSize</name>
+		<value>10MB</value>
+	</Property>
+	<Property>
+		<name>WSTrace.RollFiles</name>
+		<value>5</value>
+	</Property>
+	
+	<Property>
+		<name>System.RollSize</name>
+		<value>10MB</value>
+	</Property>
+	<Property>
+		<name>System.RollFiles</name>
+		<value>10</value>
+	</Property>
+	<Property>
+		<name>Exception.RollSize</name>
+		<value>10MB</value>
+	</Property>	
+	<Property>
+		<name>Exception.RollFiles</name>
+		<value>10</value>
+	</Property>	
+	<Property>
+		<name>Transaction.RollSize</name>
+		<value>10MB</value>
+	</Property>
+	<Property>
+		<name>Transaction.RollFiles</name>
+		<value>10</value>
+	</Property>		
+	<Property>
+		<name>AuditAdministrative.RollSize</name>
+		<value>10MB</value>
+	</Property>	
+	<Property>
+		<name>AuditAdministrative.RollFiles</name>
+		<value>10</value>
+	</Property>			
+	<Property>
+		<name>AuditConsumer.RollSize</name>
+		<value>10MB</value>
+	</Property>
+	<Property>
+		<name>AuditConsumer.RollFiles</name>
+		<value>10</value>
+	</Property>		
+	<Property>
+		<name>CustomerCare.RollSize</name>
+		<value>10MB</value>
+	</Property>	
+	<Property>
+		<name>CustomerCare.RollFiles</name>
+		<value>10</value>
+	</Property>			
+	<Property>
+		<name>CPSService.RollSize</name>
+		<value>10MB</value>
+	</Property>		
+	<Property>
+		<name>CPSService.RollFiles</name>
+		<value>10</value>
+	</Property>				
+
+	<Property>
+		<name>ProductAdmin.RollSize</name>
+		<value>10MB</value>
+	</Property>		
+	<Property>
+		<name>ProductAdmin.RollFiles</name>
+		<value>10</value>
+	</Property>		
+	
+		<Property>
+		<name>EventLog.RollSize</name>
+		<value>10MB</value>
+	</Property>		
+	<Property>
+		<name>EventLog.RollFiles</name>
+		<value>10</value>
+	</Property>		
+	
+	<!-- Configure JDBC Appender -->
+	<Property>
+		<name>JDBCAppender</name>
+		<value>Audit</value>
+	</Property>
+	<Property>
+		<name>JDBCAppender.fallbackErrorHandler</name>
+		<value>Firma.WSTrace</value>
+	</Property>
+	<Property>
+		<name>Audit</name>
+		<value>DEBUG</value>
+	</Property>
+	<Property>
+		<name>Audit.dbclass</name>
+		<value>oracle.jdbc.OracleDriver</value>
+	</Property>
+	<Property>
+		<name>Audit.connector</name>
+		<value>ca.teranet.firma.config.FirmaWeblogicConnectionHandler</value>
+	</Property>
+	<Property>
+		<name>Audit.fallbackErrorHandler</name>
+		<value>ca.teranet.firma.config.FirmaErrorHandler</value>
+	</Property>
+	<Property>
+		<name>Audit.sql</name>
+		<value>INSERT INTO WEB_SERVICE_AUDIT (audit_id, proxy_name, proxy_method, app_id, profile_id, start_date, duration, success, fault_msg) VALUES (SEQ_WEB_SERVICE_AUDIT.nextval, '@MSG@', '@MDC:proxy_method@', '@MDC:app_id@', 
+     '@MDC:profile_id@', '@MDC:start_date@', @MDC:duration@,'@MDC:success@', '@MDC:fault_msg@') </value>
+	</Property>
+	<Property>
+		<name>Audit.layout</name>
+		<value>org.apache.log4j.PatternLayout</value>
+	</Property>
+	<Property>
+		<name>Audit.layout.ConversionPattern</name>
+		<value>[%t] %m##%d{dd-MMM-yy}#%d{HH:mm:SS a}#%X{RemoteAddress}</value>
+	</Property>
+	<Property>
+		<name>Audit.layoutPartsDelimiter</name>
+		<value>#</value>
+	</Property>
+	<Property>
+		<name>Audit.commit</name>
+		<value>true</value>
+	</Property>
+	<Property>
+		<name>Audit.quoteReplace</name>
+		<value>true</value>
+	</Property>
+	<Property>
+		<name>Audit.buffer</name>
+		<value>1</value>
+	</Property>
+     
+		<!-- the shopping cart logger-->
+	<Property>
+		<name>ShoppingCart.RollSize</name>
+		<value>10MB</value>
+	</Property>	
+	<Property>
+		<name>ShoppingCart.RollFiles</name>
+		<value>10</value>
+	</Property>		
+	<Property>
+		<name>ShoppingCart</name>
+		<value>DEBUG</value>
+	</Property>
+	<!-- end shopping cart-->
+</FirmaConfig>
