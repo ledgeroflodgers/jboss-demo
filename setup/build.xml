@@ -147,15 +147,6 @@
 
 		<delete file="${unity}/unity.ear" />
 
-		<ear destfile="${unity}/unity.ear" appxml="${build}/unity/META-INF/application.xml">
-
-			<fileset dir="${build}/unity"
-				excludes="lib/uauth_config.jar,lib/uconfig.jar,lib/uerp_config.jar,META-INF/jboss-deployment-structure.xml,customercare/**/*.*" />
-
-			<metainf dir="${unity}/META-INF" includes="jboss-deployment-structure.xml" />			
-			<metainf dir="../cspadmin/src/main/webapp/META-INF" includes="jboss-ejb-client.xml" />
- 			
-		</ear>
 
 		<!-- install local repository -->
 		<echo> ----->>>>>>>>>>>>>>>>>>>>>>>>:MVN Command path=${mvncmd}, install: ${installFile} , repository: ${settings.localRepository}</echo>
