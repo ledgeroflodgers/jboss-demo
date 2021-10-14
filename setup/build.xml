@@ -46,4 +46,10 @@
 	<property name="jboss.module.base" value="${jboss.dir}/modules/system/layers/base" />
 	<property name="jboss.bin.base" value="${jboss.dir}/bin"/>
 	
+	<target name="setup" depends="setup_unix" description="setup csp environment" />
+	
+	<target name="setup_unix" unless="isWin" description="setup for jenkins on linux">
+		<echo message="start setup_unix ..., Maven localRepository: ${settings.localRepository}"/>
+	</target>
+	
 </project>
