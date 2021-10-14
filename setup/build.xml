@@ -398,93 +398,13 @@
 		</exec>
 	</target>
 	
-	<target name="setup" depends="setup_win, setup_unix" description="setup csp environment" />
+	<target name="setup" depends="setup_unix" description="setup csp environment" />
 	
 	<target name="setup_unix" unless="isWin" description="setup for jenkins on linux">
 		<echo message="start setup_unix ..., Maven localRepository: ${settings.localRepository}"/>
 		<antcall target="unitycustomize" />
 		<antcall target="W2JPolarisService" />
 		<antcall target="W2JPinGeoWarehouse"/>
-	</target>
-	
-	<target name="setup_win" if="isWin" description="setup of CSP in Windows(Local)">
-		<echo message="start setup_win ..., Maven localRepository: ${settings.localRepository}"/>
-		<mkdir dir="${csp.local.config}"/>
-		<mkdir dir="${csp.local.config}/Local"/>
-		<mkdir dir="${csp.local.config}/Local/owl"/> 
-		<mkdir dir="C:/logs"/>
-		<mkdir dir="${CSP_HOME}"/>
-		<mkdir dir="${jboss.dir}/server"/>
-		
-		<copy todir="${jboss.dir}/server/csp-pt/configuration" >
-					<fileset dir="${jboss.dir}/domain/configuration" includes="**/*" />
-		</copy>
-			
-		
-		<copy todir="${jboss.dir}/server/csp-bt/configuration" >
-					<fileset dir="${jboss.dir}/domain/configuration" includes="**/*" />
-		</copy>
-		<copy todir="${CSP_HOME}">
-			<fileset dir="..\jboss\${config}\Local">
-				<include name="CspInt.epf" />
-				<include name="entrust.ini" />
-				<include name="cspstore" />
-			</fileset>
-		</copy>
-		
-		<mkdir dir="${csp.local.config}/Local/SearchNameReport"/>
-		<copy todir="${csp.local.config}/Local/SearchNameReport">
-			<fileset dir="unity/conf">
-					<include name="TeranetCorpLogo.png"/>
-					<include name="teraneteXpress.png"/>
-					<include name="onland-receipt-template_en.html"/>
-					<include name="onland-receipt-template_fr.html"/>
-					<include name="onland-password-reset-template_fr.html"/>
-					<include name="onland-password-reset-template_en.html"/>
-					<include name="onland-certify-copy-template_en.html"/>
-					<include name="onland-certify-copy-item-template_en.html"/>
-					<include name="onland-account_activation-template_en.html"/>
-					<include name="onland-account_activation-template_fr.html"/>
-			</fileset>
-		</copy>			
-		
-		<copy todir="${CSP_HOME}\unity\conf">
-			<fileset dir="../jboss/config/Local/unity">
-				<include name="log4j.properties" />
-				<include name="unity.properties" />
-				<include name="cart.properties" />
-				<include name="unity-auth.properties" />
-			</fileset>
-			<fileset dir="${unity}\conf">
-				<include name="OrderConfirmation.txt" />
-				<include name="OrderConfirmationTE.txt" />
-				<include name="unityTemplate.pdf" />
-				<include name="unityTemplateTE.pdf" />
-			</fileset>			
-		</copy>
-		<copy todir="${CSP_HOME}\unity\config">
-			<fileset dir="${unity}\${config}">
-				<include name="configLogger.xml" />
-			</fileset>
-		</copy>
-		<copy todir="${CSP_HOME}\unity">
-			<fileset dir="${unity}\config">
-				<include name="FirmaConfig.xsd" />
-			</fileset>
-		</copy>
-		
-		<copy todir="${csp.local.config}/Local/owl">
-			<fileset dir="unity/conf">
-					<include name="OWL-report-template.pdf"/>
-			</fileset>
-		</copy>	
-		
-		<antcall target="W2JPolarisService" />
-
-		<antcall target="unitycustomize" />
-		<antcall target="W2JPinGeoWarehouse"/>
-		<antcall target="jboss-modules"/>
-		<antcall target="ualcreate" />
 	</target>
 	
 	<target name="jboss-modules">
