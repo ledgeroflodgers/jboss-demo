@@ -1,0 +1,786 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="CSP" basedir="." default="setup">
+
+	<property environment="env"/>
+	<property name="build" value="build" />
+	<property name="unity" value="unity" />
+	<property name="config" value="config" />
+	<property name="src" value="src" />
+	<property name="w2j.temp.compile.dir" value="./compiled"/>
+	<property name="w2j.temp.compile.dir.polaris" value="./compiledpolaris"/>
+	<property name="wsdl.dir" value="wsdl"/>
+	<property name="jboss" value="jboss" />
+	<property name="disttemp" value="disttemp" />
+	<property name="installFile" value="install:install-file" />
+	<property name="csp.local.config" value="/apps/csp/config" />
+
+	<condition property="isWin" value="true">
+	  <os family="windows" />
+    </condition>
+	
+	<condition property="jboss.dir" value="${JBOSS_HOME}">
+	  <os family="unix" />
+    </condition>
+	<condition property="jboss.dir" value="${env.JBOSS_HOME}">
+	  <os family="windows" />
+    </condition>
+	
+	<condition property="CSP_HOME" value="/apps/foundation/csp">
+	  <os family="unix" />
+    </condition>
+    <condition property="CSP_HOME" value="C:/csp">
+	  <os family="windows" />
+    </condition>
+	
+	<condition property="mvncmd" value="/usr/share/maven/bin/mvn">
+		<os family="unix" />
+	</condition>
+	<condition property="settings.localRepository" value="/home/jboss/.m2/repository">
+		<os family="unix" />
+	</condition>
+
+	<condition property="mvncmd" value="${env.MAVEN_HOME}/bin/mvn.cmd">
+		<os family="windows" />
+	</condition>	
+
+<!--	<condition property="installFile" value="install:install-file">
+		<os family="unix" />
+	</condition>
+	<condition property="installFile" value="install:install-file">
+		<os family="windows" />
+	</condition>-->
+
+	<property name="jboss.module.base" value="${jboss.dir}/modules/system/layers/base" />
+	<property name="jboss.bin.base" value="${jboss.dir}/bin"/>
+	
+	<target name="unitycustomize" description="customized unity.ear to csp's deploy structure">
+		<delete dir="${build}/unity" />
+		<unzip src="${settings.localRepository}/ca/teranet/unity/unity-ear/${unity.jar.version}/unity-ear-${unity.jar.version}.ear" dest="${build}/unity" />
+
+		<delete file="${build}/unity/password.jar" />
+		<unwar src="${build}/unity/customercare.war" dest="${build}/unity/customercare" />
+
+
+		<copy todir="unity" overwrite="true" preservelastmodified="true">
+
+			<fileset dir="${build}/unity/lib">
+				<include name="uauth.jar" />
+				<include name="uauthprovider.jar" />
+				<include name="ucore.jar" />
+				<include name="jdbcappender.jar" />
+				<include name="furmaSecurer.jar" />
+				<include name="usecurity.jar" />
+				<include name="utags.jar" />
+
+				<include name="cr_untappformatters.jar" />
+				<include name="cr_untcommon.jar" />
+
+				<include name="usecurity.jar" />
+				<include name="sap_account_balance_range.jar" />
+				<include name="sap_customer_change.jar" />
+				<include name="sap_customer_creation.jar" />
+				<include name="sap_transaction_posting.jar" />
+				<include name="uaccounting_erp.jar" />
+				<include name="uaccounting_erp_tv.jar" />
+				<include name="ucustomer_erp.jar" />
+				<include name="uerp.jar" />
+				<include name="uerp_connector.jar" />
+				<include name="uerp_connector_sap.jar" />
+				<include name="uerp_vo.jar" />
+				<include name="upricing_erp.jar" />
+
+				<include name="uaccounting_pia.jar" />
+				<include name="uaccounting.jar" />
+				<include name="uantlr.jar" />
+
+				<include name="uauth_config.jar" />
+				<include name="uconfig.jar" />
+				<include name="ucpsconfig.jar" />
+				<include name="uexpr.jar" />
+				<include name="urecovery.jar" />
+				<include name="ureport.jar" />
+
+				<include name="jackson-core-asl-1.9.2.jar" />
+				<include name="jackson-mapper-asl-1.9.2.jar" />				
+
+			</fileset>
+
+			<fileset dir="${build}/unity">
+
+				<include name="ubilling.jar" />
+				<include name="ucollection.jar" />
+				<include name="ucollection_aa.jar" />
+				<include name="ucollection_cash.jar" />
+				<include name="ucollection_cc.jar" />
+				<include name="ucollection_cc_cps.jar" />
+				<include name="ucollection_cc_pg.jar" />
+				<include name="ucollection_cc_tl.jar" />
+				<include name="ucollection_invoice.jar" />
+				<include name="ucollection_pad.jar" />
+				<include name="ucore_ejb.jar" />
+				<include name="ucustomer.jar" />
+				<include name="upricing.jar" />
+				<include name="ushoppingcart_ejb.jar" />
+				<include name="ushoppingcart.jar" />
+				<include name="ubilling_docket.jar" />
+				<include name="ucustomer_billing.jar" />
+				<include name="ucustomer_invoicing.jar" />
+				<include name="udocket.jar" />
+				<include name="uaudit.jar" />
+
+				<include name="uaccounting.jar" />
+
+
+			</fileset>
+
+			<fileset dir="${build}/unity/customercare/WEB-INF/lib">
+				<include name="ushoppingcart.jar" />
+			</fileset>
+
+		</copy>
+		<copy todir="${disttemp}">
+			<fileset file="${settings.localRepository}/org/apache/commons/commons-csv/1.5/commons-csv-1.5.jar" />
+		</copy>
+
+		<antcall target="replace_jboss_ejb_security_domain" />
+
+
+		<delete file="${unity}/unity.ear" />
+
+		<ear destfile="${unity}/unity.ear" appxml="${build}/unity/META-INF/application.xml">
+
+			<fileset dir="${build}/unity"
+				excludes="lib/uauth_config.jar,lib/uconfig.jar,lib/uerp_config.jar,META-INF/jboss-deployment-structure.xml,customercare/**/*.*" />
+
+			<metainf dir="${unity}/META-INF" includes="jboss-deployment-structure.xml" />			
+			<metainf dir="../cspadmin/src/main/webapp/META-INF" includes="jboss-ejb-client.xml" />
+ 			
+		</ear>
+
+		<!-- install local repository -->
+		<echo> ----->>>>>>>>>>>>>>>>>>>>>>>>:MVN Command path=${mvncmd}, install: ${installFile} , repository: ${settings.localRepository}</echo>
+		<echo> ----->>>>>>>>>>>>>>>>>>>>:1 </echo>
+		<!-- install unity jars into maven local repository -->
+		<exec executable="${mvncmd}" >
+			<arg line=" ${installFile} -Dfile=${unity}/uaccounting_pia.jar -DgroupId=ca.teranet.unity -DartifactId=uaccounting_pia -Dversion=${unity.jar.version} -Dpackaging=jar -DlocalRepositoryPath=${settings.localRepository}"/>
+		</exec>
+		<echo> ----->>>>>>>>>>>>>>>>>>>>:MVN command installed files successfully </echo>
+		<exec executable="${mvncmd}" >
+			<arg line=" ${installFile} -Dfile=${unity}/uaccounting.jar -DgroupId=ca.teranet.unity -DartifactId=uaccounting -Dversion=${unity.jar.version} -Dpackaging=jar -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>		
+		<exec executable="${mvncmd}" >
+			<arg line=" ${installFile} -Dfile=${unity}/uantlr.jar -DgroupId=ca.teranet.unity -DartifactId=uantlr -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >
+			<arg line=" ${installFile} -Dfile=${unity}/uaudit.jar -DgroupId=ca.teranet.unity -DartifactId=uaudit -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/uauth.jar -DgroupId=ca.teranet.unity -DartifactId=uauth -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/uauthprovider.jar -DgroupId=ca.teranet.unity -DartifactId=uauthprovider -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/ubilling_docket.jar -DgroupId=ca.teranet.unity -DartifactId=ubilling_docket -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/ubilling.jar -DgroupId=ca.teranet.unity -DartifactId=ubilling -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/ucollection_aa.jar -DgroupId=ca.teranet.unity -DartifactId=ucollection_aa -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/ucollection_cash.jar -DgroupId=ca.teranet.unity -DartifactId=ucollection_cash -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/ucollection_cc_cps.jar -DgroupId=ca.teranet.unity -DartifactId=ucollection_cc_cps -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/ucollection_cc_pg.jar -DgroupId=ca.teranet.unity -DartifactId=ucollection_cc_pg -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/ucollection_cc_tl.jar -DgroupId=ca.teranet.unity -DartifactId=ucollection_cc_tl -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/ucollection_cc.jar -DgroupId=ca.teranet.unity -DartifactId=ucollection_cc -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/ucollection_invoice.jar -DgroupId=ca.teranet.unity -DartifactId=ucollection_invoice -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/ucollection_pad.jar -DgroupId=ca.teranet.unity -DartifactId=ucollection_pad -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/ucollection.jar -DgroupId=ca.teranet.unity -DartifactId=ucollection -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/uconfig.jar -DgroupId=ca.teranet.unity -DartifactId=uconfig -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/ucore_ejb.jar -DgroupId=ca.teranet.unity -DartifactId=ucore_ejb -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/ucore.jar -DgroupId=ca.teranet.unity -DartifactId=ucore -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/ucpsconfig.jar -DgroupId=ca.teranet.unity -DartifactId=ucpsconfig -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/ucustomer_billing.jar -DgroupId=ca.teranet.unity -DartifactId=ucustomer_billing -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>			
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/ucustomer_invoicing.jar -DgroupId=ca.teranet.unity -DartifactId=ucustomer_invoicing -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/ucustomer.jar -DgroupId=ca.teranet.unity -DartifactId=ucustomer -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/udocket.jar -DgroupId=ca.teranet.unity -DartifactId=udocket -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/uexpr.jar -DgroupId=ca.teranet.unity -DartifactId=uexpr -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/upricing.jar -DgroupId=ca.teranet.unity -DartifactId=upricing -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/urecovery.jar -DgroupId=ca.teranet.unity -DartifactId=urecovery -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>				
+
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/ureport.jar -DgroupId=ca.teranet.unity -DartifactId=ureport -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/usecurity.jar -DgroupId=ca.teranet.unity -DartifactId=usecurity -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/ushoppingcart_ejb.jar -DgroupId=ca.teranet.unity -DartifactId=ushoppingcart_ejb -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/ushoppingcart.jar -DgroupId=ca.teranet.unity -DartifactId=ushoppingcart -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>	
+		<exec executable="${mvncmd}" >			
+			<arg line=" ${installFile} -Dfile=${unity}/utags.jar -DgroupId=ca.teranet.unity -DartifactId=utags -Dversion=${unity.jar.version} -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>		 
+		</exec>
+
+		<echo> ----->>>>>>>>>>>>>>>>>>>>:MVN command installed files successfully </echo>
+	</target>
+
+
+	<target name="replace_jboss_ejb_security_domain">
+
+		<!-- change ejb access security domain in the jboss-ejb3.xml -->
+
+		<touch file="${unity}/config/jboss-ejb3.xml" />
+		<touch file="${unity}/config/ucore_ejb/jboss-ejb3.xml" />
+		<touch file="${unity}/config/ucore_ejb/ejb-jar.xml" />
+
+		<jar destfile="${build}/unity/uaccounting.jar" update="true">
+			<zipfileset dir="${unity}/config" includes="jboss-ejb3.xml"
+				prefix="META-INF" />
+		</jar>
+		<jar destfile="${build}/unity/uaudit.jar" update="true">
+			<zipfileset dir="${unity}/config" includes="jboss-ejb3.xml"
+				prefix="META-INF" />
+		</jar>
+		<jar destfile="${build}/unity/ubatchorder.jar" update="true">
+			<zipfileset dir="${unity}/config" includes="jboss-ejb3.xml"
+				prefix="META-INF" />
+		</jar>
+		<jar destfile="${build}/unity/ubilling.jar" update="true">
+			<zipfileset dir="${unity}/config" includes="jboss-ejb3.xml"
+				prefix="META-INF" />
+		</jar>
+		<jar destfile="${build}/unity/ubilling_docket.jar" update="true">
+			<zipfileset dir="${unity}/config" includes="jboss-ejb3.xml"
+				prefix="META-INF" />
+		</jar>
+		<jar destfile="${build}/unity/ucollection.jar" update="true">
+			<zipfileset dir="${unity}/config" includes="jboss-ejb3.xml"
+				prefix="META-INF" />
+		</jar>
+		<jar destfile="${build}/unity/ucollection_aa.jar" update="true">
+			<zipfileset dir="${unity}/config" includes="jboss-ejb3.xml"
+				prefix="META-INF" />
+		</jar>
+		<jar destfile="${build}/unity/ucollection_cash.jar" update="true">
+			<zipfileset dir="${unity}/config" includes="jboss-ejb3.xml"
+				prefix="META-INF" />
+		</jar>
+		<jar destfile="${build}/unity/ucollection_cc.jar" update="true">
+			<zipfileset dir="${unity}/config" includes="jboss-ejb3.xml"
+				prefix="META-INF" />
+		</jar>
+		<jar destfile="${build}/unity/ucollection_cc_cps.jar" update="true">
+			<zipfileset dir="${unity}/config" includes="jboss-ejb3.xml"
+				prefix="META-INF" />
+		</jar>
+		<jar destfile="${build}/unity/ucollection_cc_pg.jar" update="true">
+			<zipfileset dir="${unity}/config" includes="jboss-ejb3.xml"
+				prefix="META-INF" />
+		</jar>
+		<jar destfile="${build}/unity/ucollection_cc_tl.jar" update="true">
+			<zipfileset dir="${unity}/config" includes="jboss-ejb3.xml"
+				prefix="META-INF" />
+		</jar>
+		<jar destfile="${build}/unity/ucollection_invoice.jar" update="true">
+			<zipfileset dir="${unity}/config" includes="jboss-ejb3.xml"
+				prefix="META-INF" />
+		</jar>
+		<jar destfile="${build}/unity/ucollection_pad.jar" update="true">
+			<zipfileset dir="${unity}/config" includes="jboss-ejb3.xml"
+				prefix="META-INF" />
+		</jar>
+		<jar destfile="${build}/unity/ucore_ejb.jar" update="true">
+			<zipfileset dir="${unity}/config/ucore_ejb" includes="*.xml"
+				prefix="META-INF" />
+		</jar>
+		<jar destfile="${build}/unity/ucustomer.jar" update="true">
+			<zipfileset dir="${unity}/config" includes="jboss-ejb3.xml"
+				prefix="META-INF" />
+		</jar>
+		<jar destfile="${build}/unity/ucustomer_billing.jar" update="true">
+			<zipfileset dir="${unity}/config" includes="jboss-ejb3.xml"
+				prefix="META-INF" />
+		</jar>
+		<jar destfile="${build}/unity/ucustomer_invoicing.jar" update="true">
+			<zipfileset dir="${unity}/config" includes="jboss-ejb3.xml"
+				prefix="META-INF" />
+		</jar>
+		<jar destfile="${build}/unity/udocket.jar" update="true">
+			<zipfileset dir="${unity}/config" includes="jboss-ejb3.xml"
+				prefix="META-INF" />
+		</jar>
+		<jar destfile="${build}/unity/upricing.jar" update="true">
+			<zipfileset dir="${unity}/config" includes="jboss-ejb3.xml"
+				prefix="META-INF" />
+		</jar>
+		<jar destfile="${build}/unity/ureportquery.jar" update="true">
+			<zipfileset dir="${unity}/config" includes="jboss-ejb3.xml"
+				prefix="META-INF" />
+		</jar>
+		<jar destfile="${build}/unity/ushoppingcart_ejb.jar" update="true">
+			<zipfileset dir="${unity}/config" includes="jboss-ejb3.xml"
+				prefix="META-INF" />
+		</jar>
+
+	</target>
+	
+	<target name="ualcreate" depends="ualcreate_win, ualcreate_unix" description="entrust related" />	
+
+	<target name="ualcreate_win" if="isWin" description="entrust related">
+		<copy todir="${CSP_HOME}" overwrite="true" preservelastmodified="true">
+			<fileset dir="..\jboss\config\Local">
+				<include name="entrust.ini" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${basedir}/unity/tools" overwrite="true" preservelastmodified="true">
+			<fileset dir="${basedir}/unity">
+				<include name="usecurity.jar" />
+			</fileset>
+			<fileset dir="${jboss.dir}/modules/entrust/8.0.0/lib/win-x86_64">
+				<include name="UALJNI_64.dll" />
+			</fileset>
+			<fileset dir="${jboss.dir}/modules/entrust/8.0.0">
+				<include name="enttoolkit.jar" />
+			</fileset>				
+		</copy>	
+		
+		<exec executable="cmd">
+			<arg value="/c" />
+			<arg value="${basedir}/unity/bin/UALCreator.cmd" />
+			<arg value="${basedir}/unity" />
+		</exec>
+	</target>
+
+	<target name="ualcreate_unix" unless="isWin" description="entrust related">
+		<copy todir="${CSP_HOME}/security" overwrite="true">
+			<fileset dir="${basedir}/config/Local">
+				<include name="entrust.ini" />
+			</fileset>
+		</copy>
+		<exec executable="/bin/bash">
+			<arg value="${basedir}/unity/bin/UALCreator.build.sh" />
+			<arg value="${basedir}/unity" />
+			<arg value="AzzF0159" />
+		</exec>
+	</target>
+	
+	<target name="setup" depends="setup_win, setup_unix" description="setup csp environment" />
+	
+	<target name="setup_unix" unless="isWin" description="setup for jenkins on linux">
+		<echo message="start setup_unix ..., Maven localRepository: ${settings.localRepository}"/>
+		<antcall target="unitycustomize" />
+		<antcall target="W2JPolarisService" />
+		<antcall target="W2JPinGeoWarehouse"/>
+	</target>
+	
+	<target name="setup_win" if="isWin" description="setup of CSP in Windows(Local)">
+		<echo message="start setup_win ..., Maven localRepository: ${settings.localRepository}"/>
+		<mkdir dir="${csp.local.config}"/>
+		<mkdir dir="${csp.local.config}/Local"/>
+		<mkdir dir="${csp.local.config}/Local/owl"/> 
+		<mkdir dir="C:/logs"/>
+		<mkdir dir="${CSP_HOME}"/>
+		<mkdir dir="${jboss.dir}/server"/>
+		
+		<copy todir="${jboss.dir}/server/csp-pt/configuration" >
+					<fileset dir="${jboss.dir}/domain/configuration" includes="**/*" />
+		</copy>
+			
+		
+		<copy todir="${jboss.dir}/server/csp-bt/configuration" >
+					<fileset dir="${jboss.dir}/domain/configuration" includes="**/*" />
+		</copy>
+		<copy todir="${CSP_HOME}">
+			<fileset dir="..\jboss\${config}\Local">
+				<include name="CspInt.epf" />
+				<include name="entrust.ini" />
+				<include name="cspstore" />
+			</fileset>
+		</copy>
+		
+		<mkdir dir="${csp.local.config}/Local/SearchNameReport"/>
+		<copy todir="${csp.local.config}/Local/SearchNameReport">
+			<fileset dir="unity/conf">
+					<include name="TeranetCorpLogo.png"/>
+					<include name="teraneteXpress.png"/>
+					<include name="onland-receipt-template_en.html"/>
+					<include name="onland-receipt-template_fr.html"/>
+					<include name="onland-password-reset-template_fr.html"/>
+					<include name="onland-password-reset-template_en.html"/>
+					<include name="onland-certify-copy-template_en.html"/>
+					<include name="onland-certify-copy-item-template_en.html"/>
+					<include name="onland-account_activation-template_en.html"/>
+					<include name="onland-account_activation-template_fr.html"/>
+			</fileset>
+		</copy>			
+		
+		<copy todir="${CSP_HOME}\unity\conf">
+			<fileset dir="../jboss/config/Local/unity">
+				<include name="log4j.properties" />
+				<include name="unity.properties" />
+				<include name="cart.properties" />
+				<include name="unity-auth.properties" />
+			</fileset>
+			<fileset dir="${unity}\conf">
+				<include name="OrderConfirmation.txt" />
+				<include name="OrderConfirmationTE.txt" />
+				<include name="unityTemplate.pdf" />
+				<include name="unityTemplateTE.pdf" />
+			</fileset>			
+		</copy>
+		<copy todir="${CSP_HOME}\unity\config">
+			<fileset dir="${unity}\${config}">
+				<include name="configLogger.xml" />
+			</fileset>
+		</copy>
+		<copy todir="${CSP_HOME}\unity">
+			<fileset dir="${unity}\config">
+				<include name="FirmaConfig.xsd" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${csp.local.config}/Local/owl">
+			<fileset dir="unity/conf">
+					<include name="OWL-report-template.pdf"/>
+			</fileset>
+		</copy>	
+		
+		<antcall target="W2JPolarisService" />
+
+		<antcall target="unitycustomize" />
+		<antcall target="W2JPinGeoWarehouse"/>
+		<antcall target="jboss-modules"/>
+		<antcall target="ualcreate" />
+	</target>
+	
+	<target name="jboss-modules">
+		<antcall target="deploy-entrust-module"/>
+		<antcall target="deploy-pt-module"/>
+		<antcall target="deploy-ldap-module"/>
+		<antcall target="deploy-bt-module"/>
+		<antcall target="log4j2-module"/>
+		<antcall target="deploy-jdbc-module"/>
+	</target>
+	
+	<target name="deploy-entrust-module">
+		<copy todir="${jboss.dir}/modules/entrust" overwrite="true" preservelastmodified="true">
+			<fileset dir="../${jboss}/module/entrust">
+				<include name="**/**" />
+			</fileset>			
+		</copy>
+		<copy file="${settings.localRepository}/com/entrust/enttoolkit/8.0.36.Csp.Signed.2018.08.01/enttoolkit-8.0.36.Csp.Signed.2018.08.01.jar" tofile="${jboss.dir}/modules/entrust/8.0.0/enttoolkit-8.0.36.jar"/>
+	</target>	
+	
+	<target name="deploy-pt-module">
+		
+		<!-- copy jars for module csp-web-lib and unity-lib -->
+		<copy todir="${jboss.dir}/modules/csp-web-lib/main" overwrite="true" preservelastmodified="true">
+			<fileset file="../${jboss}/module/csp-web-lib/module.xml" />
+			<fileset file="${settings.localRepository}/ca/teranet/ldap/jboss-authentication-provider/3.0/jboss-authentication-provider-3.0.jar" />
+			<fileset file="${settings.localRepository}/org/antlr/antlr-runtime/3.0/antlr-runtime-3.0.jar" />
+			<fileset file="${settings.localRepository}/edu/emory/mathcs/backport/2.2/backport-2.2.jar" />
+			<fileset file="${settings.localRepository}/org/bouncycastle/bcmail/1.1/bcmail-1.1.jar" />
+			<fileset file="${settings.localRepository}/org/bouncycastle/bcprov/1.1/bcprov-1.1.jar" />
+			<fileset file="${settings.localRepository}/org/bouncycastle/bctsp/1.1/bctsp-1.1.jar" />
+			<fileset file="${settings.localRepository}/cglib/cglib-nodep/2.1_3/cglib-nodep-2.1_3.jar" />
+			<fileset file="${settings.localRepository}/org/aopalliance/com.springsource.org.aopalliance/1.0.0/com.springsource.org.aopalliance-1.0.0.jar" />
+			<fileset file="${settings.localRepository}/commons-beanutils/commons-beanutils/1.8.3/commons-beanutils-1.8.3.jar" />
+			<fileset file="${settings.localRepository}/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1.jar" />
+			<fileset file="${settings.localRepository}/commons-digester/commons-digester/1.8/commons-digester-1.8.jar" />
+			<fileset file="${settings.localRepository}/commons-lang/commons-lang/2.5/commons-lang-2.5.jar" />
+			<fileset file="${settings.localRepository}/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar" />
+			<fileset file="${settings.localRepository}/commons-logging-api/commons-logging-api/1.1/commons-logging-api-1.1.jar" />
+			<fileset file="${settings.localRepository}/org/displaytag/displaytag/1.2/displaytag-1.2.jar" />
+			<fileset file="${settings.localRepository}/org/owasp/esapi/esapi/2.1.0/esapi-2.1.0.jar" />
+			<fileset file="${settings.localRepository}/com/lowagie/iText/2.1.7/iText-2.1.7.jar" />
+			<fileset file="${settings.localRepository}/com/itextpdf/itextpdf/5.5.12/itextpdf-5.5.12.jar" />
+			<fileset file="${settings.localRepository}/hsqldb/hsqldb/1.8.0/hsqldb-1.8.0.jar" />
+			<fileset file="${settings.localRepository}/ognl/ognl/20040814/ognl-20040814.jar" />
+			<fileset file="${settings.localRepository}/org/springframework/spring-aop/4.2.5.RELEASE/spring-aop-4.2.5.RELEASE.jar" />
+			<fileset file="${settings.localRepository}/org/springframework/spring-beans/4.2.5.RELEASE/spring-beans-4.2.5.RELEASE.jar" />
+			<fileset file="${settings.localRepository}/org/springframework/spring-context/4.2.5.RELEASE/spring-context-4.2.5.RELEASE.jar" />
+			<fileset file="${settings.localRepository}/org/springframework/spring-context-support/4.2.5.RELEASE/spring-context-support-4.2.5.RELEASE.jar" />
+			<fileset file="${settings.localRepository}/org/springframework/spring-core/4.2.5.RELEASE/spring-core-4.2.5.RELEASE.jar" />
+			<fileset file="${settings.localRepository}/org/springframework/spring-expression/4.2.5.RELEASE/spring-expression-4.2.5.RELEASE.jar" />
+			<fileset file="${settings.localRepository}/org/springframework/spring-tx/4.2.5.RELEASE/spring-tx-4.2.5.RELEASE.jar" />
+			<fileset file="${settings.localRepository}/org/springframework/spring-web/4.2.5.RELEASE/spring-web-4.2.5.RELEASE.jar" />
+			<fileset file="${settings.localRepository}/org/springframework/spring-webmvc-portlet/4.2.5.RELEASE/spring-webmvc-portlet-4.2.5.RELEASE.jar" />
+			<fileset file="${settings.localRepository}/org/springframework/spring-webmvc/4.2.5.RELEASE/spring-webmvc-4.2.5.RELEASE.jar" />
+			<fileset file="${settings.localRepository}/org/springframework/webflow/spring-binding/2.4.2.RELEASE/spring-binding-2.4.2.RELEASE.jar" />
+			<fileset file="${settings.localRepository}/org/springframework/webflow/spring-js/2.4.2.RELEASE/spring-js-2.4.2.RELEASE.jar" />
+			<fileset file="${settings.localRepository}/org/springframework/webflow/spring-webflow/2.4.2.RELEASE/spring-webflow-2.4.2.RELEASE.jar" />
+			<fileset file="${settings.localRepository}/org/hibernate/hibernate-core/3.6.3.Final/hibernate-core-3.6.3.Final.jar" />
+			<fileset file="${settings.localRepository}/org/springframework/flex/spring-flex-core/1.5.2.RELEASE/spring-flex-core-1.5.2.RELEASE.jar" />
+			<fileset file="${settings.localRepository}/org/springframework/spring-integration-core/2.0.3.RELEASE/spring-integration-core-2.0.3.RELEASE.jar" />
+			<fileset file="${settings.localRepository}/org/springmodules/springmodules-validation-repackaged-for-CSP/0.9-20080306135050/springmodules-validation-repackaged-for-CSP-0.9-20080306135050-RELEASE.jar" />
+			<fileset file="${settings.localRepository}/org/springframework/spring-security-config/3.0.2.RELEASE/spring-security-config-3.0.2.RELEASE.jar" />
+			<fileset file="${settings.localRepository}/org/springframework/spring-security-config/3.0.2.RELEASE/spring-security-config-3.0.2.RELEASE.jar" />
+			<fileset file="${settings.localRepository}/org/springframework/spring-security-core/3.0.2.RELEASE/spring-security-core-3.0.2.RELEASE.jar" />
+			<fileset file="${settings.localRepository}/org/springframework/spring-security-web/3.0.2.RELEASE/spring-security-web-3.0.2.RELEASE.jar" />
+			<fileset file="${settings.localRepository}/org/springframework/spring-security-taglibs/3.0.2.RELEASE/spring-security-taglibs-3.0.2.RELEASE.jar" />
+			<fileset file="${settings.localRepository}/org/springframework/spring-security-crypto/3.1.0.RELEASE/spring-security-crypto-3.1.0.RELEASE.jar"/>
+			<fileset file="${settings.localRepository}/org/apache/tiles/tiles-api/2.2.2/tiles-api-2.2.2.jar" />
+			<fileset file="${settings.localRepository}/org/apache/tiles/tiles-core/2.2.2/tiles-core-2.2.2.jar" />
+			<fileset file="${settings.localRepository}/org/apache/tiles/tiles-jsp/2.2.2/tiles-jsp-2.2.2.jar" />
+			<fileset file="${settings.localRepository}/org/apache/tiles/tiles-servlet/2.2.2/tiles-servlet-2.2.2.jar" />
+			<fileset file="${settings.localRepository}/org/apache/tiles/tiles-template/2.2.2/tiles-template-2.2.2.jar" />
+			<fileset file="${settings.localRepository}/jspsupport/jspsupport-repackaged-for-CSP/20170109/jspsupport-repackaged-for-CSP-20170109.jar" />
+			<fileset file="${settings.localRepository}/com/fasterxml/jackson/core/jackson-core/2.11.0/jackson-core-2.11.0.jar" />
+			<fileset file="${settings.localRepository}/com/fasterxml/jackson/core/jackson-databind/2.11.0/jackson-databind-2.11.0.jar" />
+			<fileset file="${settings.localRepository}/com/fasterxml/jackson/core/jackson-annotations/2.11.0/jackson-annotations-2.11.0.jar" />
+			<fileset file="${settings.localRepository}/org/aspectj/aspectjweaver/1.8.8/aspectjweaver-1.8.8.jar" />
+
+			<fileset dir="${unity}"> 														
+				<include name="jdbcappender.jar" />
+			</fileset>
+		</copy>
+			
+		
+		<copy todir="${jboss.dir}/modules/unity-lib/main" overwrite="true" preservelastmodified="true">
+			<fileset file="../${jboss}/module/unity-lib/module.xml" />
+			<fileset file="${settings.localRepository}/ca/teranet/ldap/jboss-authentication-provider/3.0/jboss-authentication-provider-3.0.jar" />
+			<fileset file="${settings.localRepository}/ca/teranet/firma/FurmaConfig/20060207/FurmaConfig-20060207.jar" />
+
+			<fileset dir="${unity}"> 
+				<include name="furmaSecurer.jar" />
+								
+				<include name="uaccounting.jar" />
+				<include name="uauth.jar" />
+				<include name="ubilling.jar" />
+				<include name="ucollection.jar" />
+				<include name="ucollection_aa.jar" />
+				<include name="ucollection_cash.jar" />
+				<include name="ucollection_cc.jar" />
+				<include name="ucollection_cc_cps.jar" />
+				<include name="ucollection_cc_pg.jar" />
+				<include name="ucollection_cc_tl.jar" />
+				<include name="ucollection_invoice.jar" />
+				<include name="ucollection_pad.jar" />
+				
+				<include name="ucore.jar" />
+				<include name="ucore_ejb.jar" />
+				<include name="upricing.jar" />
+				<include name="usecurity.jar" />
+				<include name="ucustomer.jar" />
+				<include name="ushoppingcart_ejb.jar" />				
+				<include name="utags.jar" />
+				<include name="urecovery.jar" />
+				<include name="uexpr.jar" />
+				
+				<include name="ushoppingcart.jar" />
+				<include name="jackson-core-asl-1.9.2.jar" />
+				<include name="jackson-mapper-asl-1.9.2.jar" />
+				
+			</fileset>			
+			
+		</copy>
+		<move file="${jboss.dir}/modules/unity-lib/main/jboss-authentication-provider-3.0.jar" tofile="${jboss.dir}/modules/unity-lib/main/jboss-authentication-provider-3.0.jar" />
+		<move file="${jboss.dir}/modules/unity-lib/main/FurmaConfig-20060207.jar" tofile="${jboss.dir}/modules/unity-lib/main/FurmaConfig.jar" />		
+	</target>
+	
+	<target name="deploy-ldap-module">
+		<mkdir dir="${jboss.dir}/modules/ca_teranet_ldap/main" />
+		<copy todir="${jboss.dir}/modules/ca_teranet_ldap/main" overwrite="true" preservelastmodified="true" >
+			<fileset file="${settings.localRepository}/ca/teranet/ldap/jboss-authentication-provider/3.0/jboss-authentication-provider-3.0.jar" />
+			<fileset file="../${jboss}/module/ca_teranet_ldap/module.xml" />
+		</copy>			
+		<move file="${jboss.dir}/modules/ca_teranet_ldap/main/jboss-authentication-provider-3.0.jar" tofile="${jboss.dir}/modules/ca_teranet_ldap/main/jboss-authentication-provider-3.0.jar" />
+	</target>
+	
+	<target name="log4j2-module">
+		<mkdir dir="${jboss.dir}/modules/log4j2/main" />	
+		<!-- copy jars for module log4j2 -->
+		<copy todir="${jboss.dir}/modules/log4j2/main" overwrite="true" preservelastmodified="true" >
+			<fileset file="${settings.localRepository}/org/apache/logging/log4j/log4j-api/2.10.0/log4j-api-2.10.0.jar" />
+			<fileset file="${settings.localRepository}/org/apache/logging/log4j/log4j-core/2.10.0/log4j-core-2.10.0.jar" />	
+			<fileset file="../${jboss}/module/log4j2/module.xml" />
+		</copy>
+	</target>
+	
+	
+	<target name="deploy-bt-module">
+		
+			<!-- copy jars for module csp-bt-lib -->
+			<copy todir="${jboss.dir}/modules/csp-bt-lib/main" overwrite="true" preservelastmodified="true">
+				<fileset file="../${jboss}/module/csp-bt-lib/module.xml" />
+				<fileset file="${settings.localRepository}/ca/teranet/ldap/jboss-authentication-provider/3.0/jboss-authentication-provider-3.0.jar" />
+				<fileset file="${settings.localRepository}/com/itextpdf/itextpdf/5.5.12/itextpdf-5.5.12.jar" />
+				<fileset file="${settings.localRepository}/org/bouncycastle/bcprov-ext-jdk15on/154/bcprov-ext-jdk15on-154.jar" />
+				<fileset file="${settings.localRepository}/commons-beanutils/commons-beanutils/1.8.3/commons-beanutils-1.8.3.jar" />
+				<fileset file="${settings.localRepository}/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1.jar" />
+				<fileset file="${settings.localRepository}/commons-digester/commons-digester/1.8/commons-digester-1.8.jar" />
+				<fileset file="${settings.localRepository}/commons-lang/commons-lang/2.5/commons-lang-2.5.jar" />
+				<fileset file="${settings.localRepository}/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar" />
+				<fileset file="${settings.localRepository}/commons-io/commons-io/2.5/commons-io-2.5.jar" />
+				<fileset file="${settings.localRepository}/org/springframework/spring-core/4.2.5.RELEASE/spring-core-4.3.18.RELEASE.jar"/>
+				
+				<fileset file="${settings.localRepository}/org/jboss/log4j/4.3.0.GA_CP07/log4j-4.3.0.GA_CP07.jar" />
+				<fileset file="${settings.localRepository}/org/quartz-scheduler/quartz/1.5.2/quartz-1.5.2.jar" />
+				<fileset file="${settings.localRepository}/ca/teranet/firma/FurmaConfig/20060207/FurmaConfig-20060207.jar" />				
+				<fileset file="${settings.localRepository}/org/apache/commons/commons-csv/1.5/commons-csv-1.5.jar" />
+
+				<fileset dir="${unity}"> 														
+					<include name="uauth.jar" />
+					<include name="uauthprovider.jar" />
+					<include name="ubilling.jar" />
+					<include name="ucollection.jar" />
+					<include name="ucollection_aa.jar" />
+					<include name="ucollection_cc.jar" />
+					<include name="ucollection_cc_pg.jar" />
+					<include name="ucollection_cc_tl.jar" />
+					<include name="ucollection_invoice.jar" />
+					<include name="ucollection_pad.jar" />
+					<include name="ucore.jar" />
+					<include name="ucore_ejb.jar" />
+					<include name="ucustomer.jar" />
+					<include name="upricing.jar" />
+					<include name="ucollection_cc_cps.jar" />	
+					<include name="ucollection_cash.jar" />
+					<include name="ushoppingcart.jar" />		
+					<include name="jdbcappender.jar" />
+					<include name="furmaSecurer.jar" />
+					<include name="urecovery.jar" />
+					<include name="uaccounting.jar" />
+					<include name="ushoppingcart_ejb.jar" />	
+					<include name="uexpr.jar" />
+					
+				</fileset>							
+			</copy>
+			
+			<move file="${jboss.dir}/modules/csp-bt-lib/main/jboss-authentication-provider-3.0.jar" tofile="${jboss.dir}/modules/csp-bt-lib/main/jboss-authentication-provider-3.0.jar" />
+			<move file="${jboss.dir}/modules/csp-bt-lib/main/FurmaConfig-20060207.jar" tofile="${jboss.dir}/modules/csp-bt-lib/main/FurmaConfig.jar" />
+
+			<copy todir="${jboss.dir}/server/csp-bt/deploy" overwrite="true" preservelastmodified="true">
+				<fileset dir="${unity}"> 	
+					<include name="unity.ear"/>
+				</fileset>
+			</copy>
+	</target>
+	
+	<target name="deploy-jdbc-module">
+		<copy todir="${jboss.dir}/modules/oracle-jdbc/main" overwrite="true" preservelastmodified="true">
+			<fileset file="../${jboss}/module/oracle-jdbc/module.xml" />
+			<!--<fileset file="${settings.localRepository}/com/oracle/database/jdbc/ojdbc8/12.2.0.1.0/ojdbc8-12.2.0.1.0.jar" />-->
+		</copy>
+		<!--<move file="${jboss.dir}/modules/oracle-jdbc/main/ojdbc8-12.2.0.1.0.jar" tofile="${jboss.dir}/modules/oracle-jdbc/main/ojdbc8.jar" />-->
+	</target>
+	
+	<target name="W2JPinGeoWarehouse">
+		<delete dir="${w2j.temp.compile.dir}/ca/teranet/gwh/client" />
+		<copy todir="${w2j.temp.compile.dir}/ca/teranet/gwh/client" >
+			<fileset dir="${w2j.temp.compile.dir}/../ca/teranet/gwh/client"></fileset>
+		</copy>
+		<jar destfile="${w2j.temp.compile.dir}/geopin_`wsclient`-1.0.jar" basedir="${w2j.temp.compile.dir}"/>
+		<exec executable="${mvncmd}" >
+			<arg line=" ${installFile} -Dfile=${w2j.temp.compile.dir}/geopin_wsclient-1.0.jar -DgroupId=ca.teranet.gwh -DartifactId=geopin_wsclient -Dversion=1.0 -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>
+		</exec>
+		<delete dir="${w2j.temp.compile.dir}/../ca"/>
+		<delete dir="${w2j.temp.compile.dir}"/>
+	</target>
+
+	<target name="W2JPolarisService">
+		<delete dir="${w2j.temp.compile.dir.polaris}/ca/teranet/elrs/documentadaptor" />
+		<delete dir="${w2j.temp.compile.dir.polaris}/ca/teranet/elrs/registeradaptor" />
+		<delete dir="${w2j.temp.compile.dir.polaris}/ca/teranet/elrs/registrationadaptor" />
+		<copy todir="${w2j.temp.compile.dir.polaris}/ca/teranet/elrs/registeradaptor" >
+			<fileset dir="${w2j.temp.compile.dir.polaris}/../ca/teranet/elrs/registeradaptor"></fileset>
+		</copy>
+		<copy todir="${w2j.temp.compile.dir.polaris}/ca/teranet/elrs/documentadaptor" >
+			<fileset dir="${w2j.temp.compile.dir.polaris}/../ca/teranet/elrs/documentadaptor"></fileset>
+		</copy>
+		<copy todir="${w2j.temp.compile.dir.polaris}/ca/teranet/elrs/registrationadaptor" >
+			<fileset dir="${w2j.temp.compile.dir.polaris}/../ca/teranet/elrs/registrationadaptor"></fileset>
+		</copy>
+		<jar destfile="${w2j.temp.compile.dir.polaris}/polaris-wsclient.jar" basedir="${w2j.temp.compile.dir.polaris}"/>
+		<exec executable="${mvncmd}" >
+			<arg line=" ${installFile} -Dfile=${w2j.temp.compile.dir.polaris}/polaris-wsclient.jar -DgroupId=ca.teranet.elrs -DartifactId=polaris-wsclient -Dversion=1.1.5 -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>
+		</exec>
+		<delete dir="${w2j.temp.compile.dir.polaris}"/>
+	</target>
+
+	
+	<target name="install_local" depends="install_local_win, install_local_unix" description="setup csp environment" />
+		<echo message="nothing to install for unix at this stage..."></echo>
+	<target name="install_local_unix" unless="isWin" description="copy files for local environment....">
+		
+	</target>
+	<target name="install_local_win" if="isWin" description="copy files for local environment....">
+		<echo message="....copy files for local deployment, jboss.dir: ${jboss.dir}"/>
+						         
+        <copy file="../jboss/config/Local/jboss/start-csp-pt.bat" tofile="${jboss.dir}\bin\start-csp-pt.bat" overwrite="true"/>
+        <copy file="../jboss/config/Local/jboss/start-csp-bt.bat" tofile="${jboss.dir}\bin\start-csp-bt.bat" overwrite="true"/>
+		<copy file="../jboss/config/Local/jboss/stop-csp-pt.bat" tofile="${jboss.dir}\bin\stop-csp-pt.bat" overwrite="true"/>
+		<copy file="../jboss/config/Local/jboss/stop-csp-bt.bat" tofile="${jboss.dir}\bin\stop-csp-bt.bat" overwrite="true"/>
+         
+        <copy file="../jboss/config/Local/jboss/standalone-pt.xml" tofile="${jboss.dir}/server/csp-pt/configuration/standalone-pt.xml" overwrite="true"/>
+        <copy file="../jboss/config/Local/jboss/standalone-full-ha-csp-bt.xml" tofile="${jboss.dir}/server/csp-bt/configuration/standalone-full-ha-csp-bt.xml" overwrite="true"/>
+                       
+        <copy file="../jboss/config/Local/csp-bt.properties" tofile="${csp.local.config}/Local/csp-bt.properties" overwrite="true"/>
+        <copy file="../jboss/config/Local/csp-pt.properties" tofile="${csp.local.config}/Local/csp-pt.properties" overwrite="true"/>
+        <copy file="../jboss/config/Local/csp-junit.properties" tofile="${csp.local.config}/Local/csp-junit.properties" overwrite="true"/>
+        <copy file="../jboss/config/Local/map-proxy.properties" tofile="${csp.local.config}/Local/map-proxy.properties" overwrite="true"/>
+        <copy file="../jboss/config/common/validation-bt.properties" tofile="${csp.local.config}/Local/validation-bt.properties" overwrite="true"/>
+        <copy file="../jboss/config/common/log4j2-csp-pt.xml" tofile="${jboss.dir}/server/csp-pt/configuration/log4j2-csp-pt.xml" overwrite="true"/>
+        <copy file="../jboss/config/common/log4j2-csp-bt.xml" tofile="${jboss.dir}/server/csp-bt/configuration/log4j2-csp-bt.xml" overwrite="true"/>
+
+        <copy todir="${csp.local.config}/Local/SearchNameReport"  overwrite="true" >
+                      <fileset dir="../setup/unity/conf" includes="*.html" />
+        </copy>
+        
+        <copy file="../cspbtlogin/target/cspbtlogin-${build-version}.jar" tofile="${jboss.dir}/modules/ca_teranet_ldap/main/cspbtlogin.jar" overwrite="true"/>
+        <copy file="../util/target/util-${build-version}.jar" tofile="${jboss.dir}/modules/ca_teranet_ldap/main/util.jar" overwrite="true"/>
+
+        <copy todir="${jboss.dir}/modules/onland-api/main" overwrite="true" >
+                      <fileset dir="../jboss/config/Local/jboss/modules/onland-api/main"/>
+        </copy>
+
+        <copy file="../cspbt-ear/target/CSPBT.ear" tofile="${jboss.dir}/server/csp-bt/deploy/CSPBT.ear" overwrite="true"/>    
+
+        <delete dir="${jboss.dir}/server/csp-pt/tmp"/>  
+        <delete dir="${jboss.dir}/server/csp-bt/tmp"/>  		
+
+	</target>
+</project>
