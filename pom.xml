@@ -103,7 +103,8 @@
     </dependencyManagement>
     
     <modules>
-        <module>setup</module>
+	    <module>setup</module>
+	    <module>init</nodule>
     </modules>
 	
     <dependencies>
