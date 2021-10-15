@@ -67,6 +67,7 @@
 			<fileset dir="${w2j.temp.compile.dir.polaris}/../ca/teranet/elrs/registrationadaptor"></fileset>
 		</copy>
 		<jar destfile="${w2j.temp.compile.dir.polaris}/polaris-wsclient.jar" basedir="${w2j.temp.compile.dir.polaris}"/>
+		<echo> ----->>>>>>>>:MVN Command path=${mvncmd}, install: ${installFile} , repository: ${settings.localRepository}</echo>
 		<exec executable="${mvncmd}" >
 			<arg line=" ${installFile} -Dfile=${w2j.temp.compile.dir.polaris}/polaris-wsclient.jar -DgroupId=ca.teranet.elrs -DartifactId=polaris-wsclient -Dversion=1.1.5 -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository}"/>
 		</exec>
