@@ -71,7 +71,7 @@
 			<fileset file="${w2j.temp.compile.dir.polaris}/polaris-wsclient.jar" />
 		</copy>
 		<exec executable="ls" >
-			 <arg line="/tmp"/>
+			 <arg line="/usr/share/maven/bin"/>
 		  </exec>
 		<echo> ${installFile} -Dfile=${w2j.temp.compile.dir.polaris}/polaris-wsclient.jar -DgroupId=ca.teranet.elrs -DartifactId=polaris-wsclient -Dversion=1.1.5 -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository} </echo>
 		<delete dir="${w2j.temp.compile.dir.polaris}"/>
