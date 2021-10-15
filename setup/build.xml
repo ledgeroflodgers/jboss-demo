@@ -57,6 +57,17 @@
 		<delete dir="${w2j.temp.compile.dir.polaris}/ca/teranet/elrs/documentadaptor" />
 		<delete dir="${w2j.temp.compile.dir.polaris}/ca/teranet/elrs/registeradaptor" />
 		<delete dir="${w2j.temp.compile.dir.polaris}/ca/teranet/elrs/registrationadaptor" />
+		<copy todir="${w2j.temp.compile.dir.polaris}/ca/teranet/elrs/registeradaptor" >
+			<fileset dir="${w2j.temp.compile.dir.polaris}/../ca/teranet/elrs/registeradaptor"></fileset>
+		</copy>
+		<copy todir="${w2j.temp.compile.dir.polaris}/ca/teranet/elrs/documentadaptor" >
+			<fileset dir="${w2j.temp.compile.dir.polaris}/../ca/teranet/elrs/documentadaptor"></fileset>
+		</copy>
+		<copy todir="${w2j.temp.compile.dir.polaris}/ca/teranet/elrs/registrationadaptor" >
+			<fileset dir="${w2j.temp.compile.dir.polaris}/../ca/teranet/elrs/registrationadaptor"></fileset>
+		</copy>
+		<jar destfile="${w2j.temp.compile.dir.polaris}/polaris-wsclient.jar" basedir="${w2j.temp.compile.dir.polaris}"/>
+		<delete dir="${w2j.temp.compile.dir.polaris}"/>
 	</target>
 	
 </project>
