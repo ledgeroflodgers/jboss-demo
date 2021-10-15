@@ -106,7 +106,7 @@
 	     <module>init</module>
 	    <module>setup</module>
     </modules>
-	
+<!--	
     <dependencies>
         <dependency>
             <groupId>org.jboss.spec.javax.servlet</groupId>
@@ -234,4 +234,5 @@
             </plugin>
         </plugins>
     </build>
+-->
 </project>
