@@ -161,6 +161,9 @@
 								<property name="unity.jar.version" value="${unity.jar.version}" />
 								<property name="build.number" value="${build.number}" />
 								<property name="release.type" value="${release.type}" />
+								<property name="release.type" value="${release.type}" />
+								<property name="mvncmd" value="/usr/share/maven/bin/mvn" />
+								<property name="installFile" value="install:install-file" />
 								<ant antfile="build.xml" target="setup"/>
 							</target>
 
