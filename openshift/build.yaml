@@ -32,7 +32,7 @@ spec:
         - name: TZ
           value: America/Toronto
         - name: MAVEN_ARGS
-          value: mvn -e -Popenshift -DskipTests -Dcom.redhat.xpaas.repo.redhatga -Dfabric8.skip=true --batch-mode -Djava.net.preferIPv4Stack=true -s /opt/eap/standalone/configuration/settings.xml -Dmaven.repo.local=/tmp/artifacts/m2  install
+          value: install
       from:
         kind: DockerImage
         name: >-
