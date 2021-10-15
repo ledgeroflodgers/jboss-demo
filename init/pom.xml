@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ca.teranet.onland</groupId>
-    <artifactId>setup</artifactId>
+    <artifactId>init</artifactId>
     <version>1.0</version>
 
     <packaging>pom</packaging>
