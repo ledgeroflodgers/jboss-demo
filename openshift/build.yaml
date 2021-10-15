@@ -31,8 +31,6 @@ spec:
           value: target/
         - name: TZ
           value: America/Toronto
-        - name: MAVEN_ARGS
-          value: clean package
       from:
         kind: DockerImage
         name: >-
