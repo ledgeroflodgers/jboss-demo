@@ -67,10 +67,13 @@
 			<fileset dir="${w2j.temp.compile.dir.polaris}/../ca/teranet/elrs/registrationadaptor"></fileset>
 		</copy>
 		<jar destfile="${w2j.temp.compile.dir.polaris}/polaris-wsclient.jar" basedir="${w2j.temp.compile.dir.polaris}"/>
-		<echo> ${installFile} -Dfile=${w2j.temp.compile.dir.polaris}/polaris-wsclient.jar -DgroupId=ca.teranet.elrs -DartifactId=polaris-wsclient -Dversion=1.1.5 -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository} </echo>
 		<copy todir="${project.basedir}/../init/target">
 			<fileset file="${w2j.temp.compile.dir.polaris}/polaris-wsclient.jar" />
 		</copy>
+		<exec executable="ls" >
+			 <arg line="/tmp"/>
+		  </exec>
+		<echo> ${installFile} -Dfile=${w2j.temp.compile.dir.polaris}/polaris-wsclient.jar -DgroupId=ca.teranet.elrs -DartifactId=polaris-wsclient -Dversion=1.1.5 -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository} </echo>
 		<delete dir="${w2j.temp.compile.dir.polaris}"/>
 	</target>
 	
