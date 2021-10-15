@@ -71,7 +71,8 @@
 			<fileset file="${w2j.temp.compile.dir.polaris}/polaris-wsclient.jar" />
 		</copy>
 		<exec executable="/usr/share/maven/bin/mvn" >
-			 <arg line="/usr/share/maven/bin/mvn install:install-file -Dfile=/tmp/src/setup/unity/tools/usecurity.jar -DgroupId=ca.teranet.elrs -DartifactId=polaris-wsclient -Dversion=1.1.5 -Dpackaging=jar"/>
+			<arg line="-v"/>
+			 <!--arg line="/usr/share/maven/bin/mvn install:install-file -Dfile=/tmp/src/setup/unity/tools/usecurity.jar -DgroupId=ca.teranet.elrs -DartifactId=polaris-wsclient -Dversion=1.1.5 -Dpackaging=jar"/-->
 		  </exec>
 		<echo> ${installFile} -Dfile=${w2j.temp.compile.dir.polaris}/polaris-wsclient.jar -DgroupId=ca.teranet.elrs -DartifactId=polaris-wsclient -Dversion=1.1.5 -Dpackaging=jar  -DlocalRepositoryPath=${settings.localRepository} </echo>
 		<delete dir="${w2j.temp.compile.dir.polaris}"/>
